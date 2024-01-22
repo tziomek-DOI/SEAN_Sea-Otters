@@ -1,2 +1,1 @@
-# SEAN_Sea-Otters
-Repository for code used in data management for the SEAN Sea Otters vital sign.
+Code repository in support of the SEAN Sea Otter vital sign monitoring program.

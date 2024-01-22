@@ -1,0 +1,73 @@
+New SO setup for TEST database:
+
+- Restored TEST on 1/4/2024
+
+The attempt to recreate the tables from scripts did not work quite correctly.
+We lost the 2019 data in Sandbox so need script recreated with data just in case.
+
+- Rename table SO.SO_D to SO.SO_D_2019
+	- Generated a data script of the old SO_D table.
+	- Then modified it to drop SO_D and recreate as SO_D_2019 (see script 'drop_SO.SO_D_create_SO.SO_D_2019_w_data.sql')
+	# Made a mistake with this script. It was auto-generated, and it re-created the keys relating to the lookups, which thus prevents the lookups
+	  from being dropped. Commented these lines out for future reference but need to manually remove the keys (they are no longer needed for this old table). 
+	# Made new script 'drop_SO.SO_D_2019_create_SO.SO_D_2019_w_data.sql' to remake the SO_D_2019 table without keys.  
+
+The best thing to do would be to generate one script with all the tables/keys so hopefully SQL Server figures out the correct order.
+So, next would be to recreate everything in the Sandbox2 first, then when it looks good (empty data tables except for 2019), make one giant create script for the TEST and PROD.
+
+Steps required to create the tables, populate lookups, create stored procs and functions,
+then load the data.
+- Ideally we can merge all of this into one PS script for a one-click setup.
+
+Needs done in TEST (and then PROD) - Perform in this sequence:
+
+# Start with step 2...hoping to deprecate step 1
+1. Use script 'drop_SO_tables.sql' to drop all the lookups and keys.
+	# We have SO_D_2019 which will remain. Later we will load this data into the new SO_D table.
+	# Best to drop all due to key constraints. Data is easily reloaded.
+1a. Add a record to tbl_protocol for the expected SO protocol version (such as, SO-2022.1).
+2. Run script 'drop_create_SO_tables.sql' to create all the new tables, populate the lookup tables, and create relationships.
+   # For PROD we can probably use this as well, since nothing was ever deployed to PROD for the new SO stuff (built in 2020). Script will check for existence and should work.
+3. Run 'insert_2019_table_into_new_SO_D_table.sql'
+	# 46832 rows affected (result of insert)
+4. Run 'create_table_SO.SO_D_2022.sql'	
+	# This is the "temp" table used to load the raw SeeOtter CSVs.
+5. Run scripts:
+	a. 'create_functions_DST_start-end_dates.sql'
+	For the sprocs, make sure the alter scripts and drop/create are matching before creating!
+	b. 'drop_create_view_SO_D_allrecs_w_lookups.sql' # Need to edit since nothing to drop
+	c. 'drop_create_sproc_sp_insert_into_SO_D_from_temp_table.sql' # Need to edit since nothing to drop
+6. Follow the (draft SOP) to execute the SSIS package which loads the raw CSV files into the SO_D_2022 (temp) table.
+	# Created PowerShell script 'load_SO_CSVs_into_temp_table.ps1' which replaces need to follow the SOP.
+	# TODO: Make batch file or some other way to launch this?
+	a. Set the working directory correctly is key. The script must be launched while in it's directory, so, if the file is at c:\temp\sp_insert_into_SO_D_from_temp_table,
+	   then user should open PowerShell, then cd c:\temp and then run the script.
+***	UPDATE: Successfully tested on 1/16/24. 
+	- Added 'Transect' column to Optimal and Abundance files to match Random
+	- Moved SSIS configuration parameters from sproc to ps script.
+	- Use this for csv (adjust as needed):
+		C:\Users\tziomek\OneDrive - DOI\dev\Powershell\SO_D\load_SO_CSVs_into_temp_table_config.csv
+	
+7. Execute stored procedure 'sp_insert_into_SO_D_from_temp_table' which transforms and loads the data from temp to the new SO_D table:
+	a. This is best done by executing PowerShell script 'insert_into_SO_D_from_temp_table.ps1' (but can also be done from SSMS directly). Requires input parameters. Example:
+	.\insert_into_SO_D_from_temp_table.ps1 -Folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022" -Filter *.csv -server inpglbafs03 -database SEAN_Staging_TEST_2017 -protocol SO-2022.1
+	# Note sproc was altered with Transect column added; new 'alter' version of sproc script created. Create script needs edited.
+	# Could make a CSV with input parameters like the other one.
+8. Export the deliverable submission candidate CSV files from the SO_D table using PowerShell script 'export_CSVs_from_database'. Example syntax:
+	.\export_CSVs_from_database.ps1 -Folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\SO_D_exports" -server_name "inpglbafs03" -database_name "SEAN_Staging_TEST_2017" -survey_date "2022-08-03" -survey_type "Optimal"
+	# Note that this needs to be run once for each CSV (survey type), so likely will always be run three times.
+	# It is possible to have this run once and generate all three, but we need to modify the input parameters since there are multiple survey dates.
+		# This loop was created on 1/18/24 and successfully exported all three files in one run. Booyah.
+	# We could make a config file, just name/value pairs in a txt or json, instead of command line params. This is better!
+9. From here, the SOP should be followed for the standard data management procedures to validate and certify the files.
+	# TODO: Finish updates and testing of website validation code.
+	# Need to add criteria for:
+	- PHOTO_TIMESTAMP_AK_Local (if we keep this in the CSV)
+	# The remaining fields are new to 2022 data so be wary
+	- ORIGINAL_FILENAME
+	- FLOWN_BY
+	- CAMERA_SYSTEM
+	- TRANSECT
+	- VALIDATED_BY
+
+
