@@ -79,7 +79,7 @@ BEGIN
 	EXEC [SSISDB].[catalog].[set_execution_parameter_value]
 		@execution_id = @EXECUTION_ID
 		,@object_type = 30	-- package parameter
-		,@parameter_name = N'[CSV_to_SO_D_2022_no_transect.dtsx].[CM.SourceConnectionFlatFile.ConnectionString]'
+		,@parameter_name = N'[CSV_to_SO_D_2022_w_transect.dtsx].[CM.SourceConnectionFlatFile.ConnectionString]'
 		,@parameter_value = @CSV_FILE_NAME;
 
 	-- Database connection string:
@@ -87,7 +87,7 @@ BEGIN
 	EXEC [SSISDB].[catalog].[set_execution_parameter_value]
 		@execution_id = @EXECUTION_ID
 		,@object_type = 30	-- package parameter
-		,@parameter_name = N'[CSV_to_SO_D_2022_no_transect.dtsx].[CM.DestinationConnectionOLEDB.ConnectionString]'
+		,@parameter_name = N'[CSV_to_SO_D_2022_w_transect.dtsx].[CM.DestinationConnectionOLEDB.ConnectionString]'
 		,@parameter_value = @PARAMETER_VALUE;
 
 	-- InitialCatalog:
@@ -95,7 +95,7 @@ BEGIN
 	EXEC [SSISDB].[catalog].[set_execution_parameter_value]
 		@execution_id = @EXECUTION_ID
 		,@object_type = 30	-- package parameter
-		,@parameter_name = N'[CSV_to_SO_D_2022_no_transect.dtsx].[CM.DestinationConnectionOLEDB.InitialCatalog]'
+		,@parameter_name = N'[CSV_to_SO_D_2022_w_transect.dtsx].[CM.DestinationConnectionOLEDB.InitialCatalog]'
 		,@parameter_value = @DATABASE_NAME;
    
 	-- 7. start the execution
