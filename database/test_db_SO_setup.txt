@@ -59,10 +59,8 @@ Needs done in TEST (and then PROD) - Perform in this sequence:
 	# Note sproc was altered with Transect column added; new 'alter' version of sproc script created. Create script needs edited.
 	# Could make a CSV with input parameters like the other one.
 8. Export the deliverable submission candidate CSV files from the SO_D table using PowerShell script 'export_CSVs_from_database'. Example syntax:
-	.\export_CSVs_from_database.ps1 -Folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\SO_D_exports" -server_name "inpglbafs03" -database_name "SEAN_Staging_TEST_2017" -survey_date "2022-08-03" -survey_type "Optimal"
-	# Note that this needs to be run once for each CSV (survey type), so likely will always be run three times.
-	# It is possible to have this run once and generate all three, but we need to modify the input parameters since there are multiple survey dates.
-		# This loop was created on 1/18/24 and successfully exported all three files in one run. Booyah.
+	.\export_CSVs_from_database.ps1 -Output_folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\SO_D_exports" -server_name "inpglbafs03" -database_name "SEAN_Staging_TEST_2017" -survey_year 2022
+		# This loop was created on 1/18/24 and successfully exported all three files in one run.
 	# We could make a config file, just name/value pairs in a txt or json, instead of command line params. This is better!
 9. From here, the SOP should be followed for the standard data management procedures to validate and certify the files.
 	# TODO: Finish updates and testing of website validation code.
