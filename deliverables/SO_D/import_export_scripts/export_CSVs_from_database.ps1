@@ -52,6 +52,12 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     Write-Host "`$outputFilename = $outputFilename"
     Write-Host " "
 
+    # Sorting does not work.
+    # What if we write the sorted data to a temp table, and then union from that? I think, if possible, the temp table needs to be sorted by a clustered index key. 
+    # If that is possible, then use bcp hint -h ORDER (column [ASC]) syntax
+    # Or, try doing the CSV export some other way...see Bill's code in the DM stuff.
+    # Or, can just create a DataReader and then write all the columns to the file manually. Slower and more painful to code but not terrible.
+#    $query = "SELECT 'PHOTO_FILE_NAME' AS PHOTO_FILE_NAME,'PHOTO_TIMESTAMP_UTC','PHOTO_TIMESTAMP_AK_Local' AS PHOTO_TIMESTAMP_AK_Local,'LATITUDE_WGS84','LONGITUDE_WGS84','ALTITUDE','SURVEY_TYPE','COUNT_ADULT','COUNT_PUP','KELP_PRESENT','LAND_PRESENT','IMAGE_QUALITY','COUNTED_BY','COUNTED_DATE','PROTOCOL','QUALITY_FLAG','ORIGINAL_FILENAME','FLOWN_BY','CAMERA_SYSTEM','TRANSECT','VALIDATED_BY'
     $query = "SELECT 'PHOTO_FILE_NAME,PHOTO_TIMESTAMP_UTC,PHOTO_TIMESTAMP_AK_Local,LATITUDE_WGS84,LONGITUDE_WGS84,ALTITUDE,SURVEY_TYPE,COUNT_ADULT,COUNT_PUP,KELP_PRESENT,LAND_PRESENT,IMAGE_QUALITY,COUNTED_BY,COUNTED_DATE,PROTOCOL,QUALITY_FLAG,ORIGINAL_FILENAME,FLOWN_BY,CAMERA_SYSTEM,TRANSECT,VALIDATED_BY'
     UNION ALL
     SELECT
@@ -77,7 +83,8 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     CASE WHEN [TRANSECT] IS NULL THEN '' ELSE [TRANSECT] END + ',' +
     [VALIDATED_BY]
     FROM [SO].[view_SO_D_allrecs_w_lookups]
-    WHERE [SURVEY_TYPE] = '$($survey_type)' AND DATEPART(year, [PHOTO_TIMESTAMP_UTC]) = $($survey_year);"
+    WHERE [SURVEY_TYPE] = '$($survey_type)' AND DATEPART(year, [PHOTO_TIMESTAMP_UTC]) = $($survey_year)
+    ORDER BY PHOTO_TIMESTAMP_AK_Local,PHOTO_FILE_NAME ASC;"
 
     Write-Host "`$query = $query"
 
