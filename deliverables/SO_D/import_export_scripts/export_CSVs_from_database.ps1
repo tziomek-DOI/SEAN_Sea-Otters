@@ -44,9 +44,9 @@ function GetSurveyDate([string] $survey_type) {
 
 }
 
-function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename) {
+function ExportCSV_BCP([string]$survey_type, [int]$survey_year, [string]$outputFilename) {
         
-    Write-Host "In ExportCSV..."
+    Write-Host "In ExportCSV_BCP..."
     Write-Host "`$survey_type = $survey_type"
     Write-Host "`$survey_year = $survey_year"
     Write-Host "`$outputFilename = $outputFilename"
@@ -95,6 +95,130 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     Invoke-Expression $bcp_cmd
 }
 
+#function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd, [System.Data.SqlClient.SqlConnection]$sqlConn) {
+function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd) {
+        
+    Write-Host "In ExportCSV..."
+    Write-Host "`$survey_type = $survey_type"
+    Write-Host "`$survey_year = $survey_year"
+    Write-Host "`$outputFilename = $outputFilename"
+    Write-Host " "
+
+    $query = @"
+    SELECT
+    [PHOTO_FILE_NAME]
+    ,[PHOTO_TIMESTAMP_UTC]
+    ,[PHOTO_TIMESTAMP_AK_Local] AS PHOTO_TIMESTAMP_AK_LOCAL
+    ,CAST([LATITUDE_WGS84] AS nvarchar) AS LATITUDE_WGS84
+    ,CAST([LONGITUDE_WGS84] AS nvarchar) AS LONGITUDE_WGS84
+    ,CAST([ALTITUDE] AS nvarchar) AS ALTITUDE
+    ,[SURVEY_TYPE]
+    ,CAST([COUNT_ADULT] AS nvarchar) AS COUNT_ADULT
+    ,CAST([COUNT_PUP] AS nvarchar) AS COUNT_PUP
+    ,CASE WHEN [KELP_PRESENT] IS NULL THEN '' ELSE [KELP_PRESENT] END AS KELP_PRESENT
+    ,CASE WHEN [LAND_PRESENT] IS NULL THEN '' ELSE [LAND_PRESENT] END AS LAND_PRESENT
+    ,CASE WHEN [IMAGE_QUALITY] IS NULL THEN '' ELSE [IMAGE_QUALITY] END AS IMAGE_QUALITY
+    ,[COUNTED_BY]
+    ,[COUNTED_DATE]
+    ,[protocol]
+    ,CASE WHEN [QUALITY_FLAG] IS NULL THEN '' ELSE [QUALITY_FLAG] END AS QUALITY_FLAG
+    ,CASE WHEN [ORIGINAL_FILENAME] IS NULL THEN '' ELSE [ORIGINAL_FILENAME] END AS ORIGINAL_FILENAME
+    ,CASE WHEN [FLOWN_BY] IS NULL THEN '' ELSE [FLOWN_BY] END AS FLOWN_BY
+    ,CASE WHEN [CAMERA_SYSTEM] IS NULL THEN '' ELSE [CAMERA_SYSTEM] END AS CAMERA_SYSTEM
+    ,CASE WHEN [TRANSECT] IS NULL THEN '' ELSE [TRANSECT] END AS TRANSECT
+    ,[VALIDATED_BY]
+    FROM [SO].[view_SO_D_allrecs_w_lookups]
+    WHERE [SURVEY_TYPE] = '$($survey_type)' AND DATEPART(year, [PHOTO_TIMESTAMP_UTC]) = $($survey_year)
+    ORDER BY PHOTO_TIMESTAMP_AK_Local,PHOTO_FILE_NAME ASC;
+"@
+    # For PS multi-line strings (above), the "@ chars on the last line MUST be the first two characters of that line,
+    # so don't try to indent them to make it look pretty!
+
+    Write-Host "`$query = $query"
+
+    # Declare connection to the server and declare command
+    #$sqlConnectionString = "Data Source=$($server_name);Initial Catalog=$($database_name);Integrated Security=SSPI;"
+    #$sqlConnection = New-Object System.Data.SqlClient.SqlConnection $sqlConnectionString
+    #$cmd = New-Object System.Data.SqlClient.SqlCommand
+    $retval = $false
+
+    try {
+        $sb = [System.Text.StringBuilder]::new()
+        #$cmd.Connection = $sqlConn
+        $cmd.CommandType = 'Text'
+        $cmd.CommandText = $query
+
+        $dr = $cmd.ExecuteReader()
+        $firstLine = $true
+
+        # strip off the enclosing double quotes:
+        $temp = $outputFilename.Replace('"','')
+
+        $filePath = [System.IO.Path]::GetDirectoryName($temp)
+        $fileName = [System.IO.Path]::GetFileName($temp)
+        $newFile = New-Item -Path $filePath -Name $fileName -ItemType File
+
+        # open a writable FileStream
+        $fileStream = $newFile.OpenWrite()
+
+        # create stream writer
+        $streamWriter = [System.IO.StreamWriter]::new($fileStream)
+
+        #$colNames = [System.Linq.Enumerable]::Range(0, $dr.FieldCount).Select($dr.GetName).ToList()
+        #$sb.Append([System.String]::Join(",", $colNames))
+        #$sb.AppendLine()
+
+        while ($dr.Read()) {
+
+            [string]$line = ""
+
+            # Write the column headers
+            if ($firstLine -eq $true) {
+                for ($i = 0; $i -lt $dr.FieldCount; $i++) {
+                    if ($i -lt $dr.FieldCount-1) {
+                        [void]$sb.Append($dr.GetName($i))
+                        [void]$sb.Append(",")
+                    } else {
+                        [void]$sb.AppendLine($dr.GetName($i))
+                    }
+                }
+                $firstLine = $false
+            }
+
+            for ($col = 0; $col -lt $dr.FieldCount - 1; $col++) {
+                if ($dr.IsDBNull($col) -ne $true) {
+                    [void]$sb.Append($dr.GetValue($col).ToString())
+                }
+                [void]$sb.Append(",")
+            }
+
+            if ($dr.IsDBNull($dr.FieldCount-1) -ne $true) {
+                [void]$sb.Append($dr.GetValue($dr.FieldCount-1).ToString())
+            }
+
+            # write to stream
+            [void]$streamWriter.WriteLine($sb.ToString())
+            $sb.Clear()
+
+        } # end while through reader
+        $dr.Close()
+        $streamWriter.Close()
+        $retval = $true
+
+    } catch [Exception] {
+        Write-Host "ERROR in ExportCSV: "
+        Write-Host $_.Exception.Message
+        Write-Error ($_.Exception | Format-List -Force | Out-String) -ErrorAction Continue
+        Write-Error ($_.InvocationInfo | Format-List -Force | Out-String) -ErrorAction Continue
+
+    } finally {
+        #if ($cmd.Connection.State -ne [System.Data.ConnectionState]::Closed) {
+        #    $sqlConnection.Close()
+        #}
+        Write-Host "'ExportCSV' finished with result: $($retval)"
+    } # end finally   
+}
+
 # special double quote character
 $doubleQuoteChar = [char]34
 $delimiter = "$($doubleQuoteChar),$($doubleQuoteChar)"
@@ -136,7 +260,7 @@ try {
         # Run the export (BCP):
         # Was having trouble passing this conversion value in the function call...
         $survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
-        ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename
+        ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
     }
 
 }
