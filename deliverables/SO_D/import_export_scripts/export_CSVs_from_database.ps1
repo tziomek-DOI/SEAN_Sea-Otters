@@ -1,17 +1,19 @@
-# Use BCP to export data to CSV files.
-#
-# We have one SQL query, which selects all records from the view. The DB record columns are omitted.
-# We can pass in the year and the survey type to filter for the export.
-#
-# NOTE!!! BCP does NOT have a mechanism to export the column headings!
-# Easiest workaround is make a UNION query and select the column headings separately.
-#
-# UPDATES:
-#
-# TZ 1/18/2024: 
-# - Added mechanism to loop through the possible survey type to export the CSV all at once.
-# - Added TRANSECT to the list of exported fields
-#
+<# Export data from database into CSV files.
+
+We have one SQL query, which selects all records from the view. The DB record columns are omitted.
+We can pass in the year and the survey type to filter for the export.
+
+UPDATES:
+
+TZ 1/18/2024: 
+- Added mechanism to loop through the possible survey type to export the CSV all at once.
+- Added TRANSECT to the list of exported fields
+
+TZ 2/13/2024:
+- Changed the export mechanism from BCP (which doesn't easily support sorting) to a SQLDataReader/StreamWriter (.NET).
+- Modified the SQL query, no longer need the UNION for column headings, and adjusted the string syntax as needed.
+
+#>
 
 # Script input parameters:
 [CmdletBinding(SupportsShouldProcess)]
@@ -20,11 +22,6 @@ param (
     [Parameter(Mandatory)]
     [String]
     $Output_folder,
-
-    # # Set the allowable file extensions (only CSV) - currently Optional:
-    # [Parameter(Mandatory)]
-    # [string]
-    # $Filter,
 
     # SQL Server connection info:
     [Parameter(Mandatory=$true)]
@@ -40,10 +37,7 @@ param (
     $survey_year
 )
 
-function GetSurveyDate([string] $survey_type) {
-
-}
-
+# This function is deprecated. Remove later once confirmed we won't use it. It is faster but not easy to sort.
 function ExportCSV_BCP([string]$survey_type, [int]$survey_year, [string]$outputFilename) {
         
     Write-Host "In ExportCSV_BCP..."
@@ -95,7 +89,9 @@ function ExportCSV_BCP([string]$survey_type, [int]$survey_year, [string]$outputF
     Invoke-Expression $bcp_cmd
 }
 
-#function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd, [System.Data.SqlClient.SqlConnection]$sqlConn) {
+<#
+ # Uses a SQLDataReader and a StreamWriter to query the database and write the CSV to file(s).
+ #>
 function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd) {
         
     Write-Host "In ExportCSV..."
@@ -144,7 +140,6 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
 
     try {
         $sb = [System.Text.StringBuilder]::new()
-        #$cmd.Connection = $sqlConn
         $cmd.CommandType = 'Text'
         $cmd.CommandText = $query
 
@@ -163,10 +158,6 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
 
         # create stream writer
         $streamWriter = [System.IO.StreamWriter]::new($fileStream)
-
-        #$colNames = [System.Linq.Enumerable]::Range(0, $dr.FieldCount).Select($dr.GetName).ToList()
-        #$sb.Append([System.String]::Join(",", $colNames))
-        #$sb.AppendLine()
 
         while ($dr.Read()) {
 
@@ -212,9 +203,6 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
         Write-Error ($_.InvocationInfo | Format-List -Force | Out-String) -ErrorAction Continue
 
     } finally {
-        #if ($cmd.Connection.State -ne [System.Data.ConnectionState]::Closed) {
-        #    $sqlConnection.Close()
-        #}
         Write-Host "'ExportCSV' finished with result: $($retval)"
     } # end finally   
 }
