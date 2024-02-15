@@ -1,0 +1,2093 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="2/14/2024 3:07:21 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="INPGLBAFS03"
+  DTS:CreatorName="NPS\ouatziomek"
+  DTS:Description="Imports SeeOtter-generated CSV files into the temp SO_D_SeeOtter table."
+  DTS:DTSID="{88C56E18-D46F-44FB-9233-8391D0911146}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.2000.229"
+  DTS:LocaleID="1033"
+  DTS:MaxErrorCount="0"
+  DTS:ObjectName="CSV_to_SO_D_SeeOtter"
+  DTS:VersionGUID="{79CDAA5C-EBC5-4929-8F8E-F1EFCFC750B3}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{1609C50A-266E-4180-8AB2-B4A1D2ED92CC}"
+      DTS:ObjectName="DestinationConnectionOLEDB">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=INPGLBAFS03;Initial Catalog=SEAN_Staging_TEST_2017;Provider=SQLNCLI11;Integrated Security=SSPI;Auto Translate=false;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SourceConnectionFlatFile]"
+      DTS:CreationName="FLATFILE"
+      DTS:DTSID="{627CF90A-AD43-45A4-9AAE-0D65BCE9ABE9}"
+      DTS:ObjectName="SourceConnectionFlatFile">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:Format="Delimited"
+          DTS:LocaleID="1033"
+          DTS:HeaderRowDelimiter="_x000D__x000A_"
+          DTS:ColumnNamesInFirstDataRow="True"
+          DTS:RowDelimiter=""
+          DTS:TextQualifier="_x003C_none_x003E_"
+          DTS:CodePage="1252"
+          DTS:ConnectionString="D:\Data\SEAN_Data\Work_Zone\SO\SO_D\2022\SO_D_20220812_R.csv">
+          <DTS:FlatFileColumns>
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageID"
+              DTS:DTSID="{7C9727B3-C474-4B73-9FFB-485A8F4D45BD}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="7"
+              DTS:TextQualified="True"
+              DTS:ObjectName="PHOTO_TIMESTAMP"
+              DTS:DTSID="{F46A6218-2F87-4B79-AF85-AF8F5105738F}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="128"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="FilePath"
+              DTS:DTSID="{365B7F7D-4A3C-4346-B52B-2467C77A585F}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="LATITUDE_WGS84"
+              DTS:DTSID="{4A2D0E35-3BE7-49AA-9A86-8F2729B05057}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="LONGITUDE_WGS84"
+              DTS:DTSID="{C1A9D08E-26D8-45E2-AE4B-65BEEB6897F0}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ALTITUDE"
+              DTS:DTSID="{1111257E-B6F3-405E-928F-D11726FF3998}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner1Lat"
+              DTS:DTSID="{621D248A-617B-4539-95BE-C0AD8A63560D}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner1Lon"
+              DTS:DTSID="{B796BA48-A96A-414C-B6B3-E0ABC7828197}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner2Lat"
+              DTS:DTSID="{3DEB29A8-F2F9-4062-A927-2E8AD081846A}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner2Lon"
+              DTS:DTSID="{6BE73082-936F-4D8F-BE52-7F8965B929B0}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner3Lat"
+              DTS:DTSID="{30D62B51-E982-4304-99B0-18AF0B6B4495}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner3Lon"
+              DTS:DTSID="{644A28C3-E379-4EDC-9758-5F4B0A3E1801}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner4Lat"
+              DTS:DTSID="{034AC08E-9695-48C5-85FC-5AC2FCFF698B}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="ImageCorner4Lon"
+              DTS:DTSID="{C601A01F-678B-4910-BDB3-57B9291C7AD2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="3"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="VALIDATED_BY"
+              DTS:DTSID="{47C332B7-D763-4ABD-B4A4-68FD61B48659}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="COUNT_ADULT"
+              DTS:DTSID="{209B0427-DFC4-4E49-884C-8E2ACC6276D0}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="3"
+              DTS:TextQualified="True"
+              DTS:ObjectName="COUNT_PUP"
+              DTS:DTSID="{22F61F84-2C38-4C85-9B74-4CF3337B6911}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="GSD"
+              DTS:DTSID="{E6E8B836-21FC-46B8-B454-23638C850349}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Width_m"
+              DTS:DTSID="{859A6064-7FA3-4742-8B3E-882DA27F339A}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Height_m"
+              DTS:DTSID="{A2B75ECE-CB03-4524-A206-673446F300F1}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:DataType="4"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Coverage_sqkm"
+              DTS:DTSID="{8D16D115-9C8D-4749-B8C8-75E28DDB1426}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="20"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="Transect"
+              DTS:DTSID="{B5B101E0-B0F6-4ADB-AFB4-D8E78B6E0622}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="3"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="FLOWN_BY"
+              DTS:DTSID="{F65CA337-BD4B-4E92-B5EC-9D7F8576AFB2}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="10"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="SeeOtter_VERSION"
+              DTS:DTSID="{DE52703D-7299-4229-B127-27B58BAABDF9}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="10"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="SURVEY_TYPE"
+              DTS:DTSID="{76C0CC33-25C1-459C-8592-D4F9CA0AFD70}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x002C_"
+              DTS:MaximumWidth="16"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="CAMERA_SYSTEM"
+              DTS:DTSID="{3A680A99-8784-4FF2-8E60-0CBC5ED9D949}"
+              DTS:CreationName="" />
+            <DTS:FlatFileColumn
+              DTS:ColumnType="Delimited"
+              DTS:ColumnDelimiter="_x000D__x000A_"
+              DTS:MaximumWidth="10"
+              DTS:DataType="129"
+              DTS:TextQualified="True"
+              DTS:ObjectName="IMAGE_QUALITY"
+              DTS:DTSID="{57361794-118D-4639-BFC5-AD4227CB3417}"
+              DTS:CreationName="" />
+          </DTS:FlatFileColumns>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Data Flow Task 1"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:DTSID="{A01F8E7C-794E-4950-AA9A-DD63DA4C28FA}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Data Flow Task 1"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          defaultBufferSize="3145728"
+          version="1">
+          <components>
+            <component
+              refId="Package\Data Flow Task 1\Data Conversion 0 - 0"
+              componentClassID="Microsoft.DataConvert"
+              contactInfo="Data Conversion;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+              description="Data Conversion"
+              name="Data Conversion 0 - 0"
+              usesDispositions="true">
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input]"
+                  name="Data Conversion Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[PHOTO_TIMESTAMP]"
+                      cachedDataType="date"
+                      cachedName="PHOTO_TIMESTAMP"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[PHOTO_TIMESTAMP]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[FilePath]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="128"
+                      cachedName="FilePath"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FilePath]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[LATITUDE_WGS84]"
+                      cachedDataType="r4"
+                      cachedName="LATITUDE_WGS84"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LATITUDE_WGS84]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[LONGITUDE_WGS84]"
+                      cachedDataType="r4"
+                      cachedName="LONGITUDE_WGS84"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LONGITUDE_WGS84]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner1Lat]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner1Lat"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner1Lon]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner1Lon"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner2Lat]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner2Lat"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner2Lon]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner2Lon"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner3Lat]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner3Lat"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner3Lon]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner3Lon"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner4Lat]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner4Lat"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[ImageCorner4Lon]"
+                      cachedDataType="r4"
+                      cachedName="ImageCorner4Lon"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[VALIDATED_BY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="VALIDATED_BY"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[VALIDATED_BY]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[GSD]"
+                      cachedDataType="r4"
+                      cachedName="GSD"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[GSD]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Width_m]"
+                      cachedDataType="r4"
+                      cachedName="Width_m"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Width_m]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Height_m]"
+                      cachedDataType="r4"
+                      cachedName="Height_m"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Height_m]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Coverage_sqkm]"
+                      cachedDataType="r4"
+                      cachedName="Coverage_sqkm"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Coverage_sqkm]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[Transect]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="20"
+                      cachedName="Transect"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Transect]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[FLOWN_BY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="FLOWN_BY"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FLOWN_BY]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[SeeOtter_VERSION]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SeeOtter_VERSION"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SeeOtter_VERSION]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[SURVEY_TYPE]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="SURVEY_TYPE"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SURVEY_TYPE]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[CAMERA_SYSTEM]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="16"
+                      cachedName="CAMERA_SYSTEM"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[CAMERA_SYSTEM]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input].Columns[IMAGE_QUALITY]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="10"
+                      cachedName="IMAGE_QUALITY"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[IMAGE_QUALITY]" />
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output]"
+                  exclusionGroup="1"
+                  name="Data Conversion Output"
+                  synchronousInputId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[PHOTO_TIMESTAMP]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[PHOTO_TIMESTAMP]"
+                      name="PHOTO_TIMESTAMP"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[PHOTO_TIMESTAMP]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FilePath]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="128"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FilePath]"
+                      name="FilePath"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FilePath]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LATITUDE_WGS84]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LATITUDE_WGS84]"
+                      name="LATITUDE_WGS84"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LATITUDE_WGS84]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LONGITUDE_WGS84]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LONGITUDE_WGS84]"
+                      name="LONGITUDE_WGS84"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LONGITUDE_WGS84]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lat]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lat]"
+                      name="ImageCorner1Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lat]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lon]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lon]"
+                      name="ImageCorner1Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lon]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lat]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lat]"
+                      name="ImageCorner2Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lat]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lon]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lon]"
+                      name="ImageCorner2Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lon]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lat]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lat]"
+                      name="ImageCorner3Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lat]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lon]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lon]"
+                      name="ImageCorner3Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lon]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lat]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lat]"
+                      name="ImageCorner4Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lat]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lon]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lon]"
+                      name="ImageCorner4Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lon]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[VALIDATED_BY]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="3"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[VALIDATED_BY]"
+                      name="VALIDATED_BY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[VALIDATED_BY]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[GSD]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[GSD]"
+                      name="GSD"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[GSD]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Width_m]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Width_m]"
+                      name="Width_m"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Width_m]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Height_m]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Height_m]"
+                      name="Height_m"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Height_m]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Coverage_sqkm]"
+                      dataType="r8"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Coverage_sqkm]"
+                      name="Coverage_sqkm"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Coverage_sqkm]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Transect]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Transect]"
+                      name="Transect"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Transect]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FLOWN_BY]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="3"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FLOWN_BY]"
+                      name="FLOWN_BY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FLOWN_BY]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SeeOtter_VERSION]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SeeOtter_VERSION]"
+                      name="SeeOtter_VERSION"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SeeOtter_VERSION]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SURVEY_TYPE]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SURVEY_TYPE]"
+                      name="SURVEY_TYPE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SURVEY_TYPE]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[CAMERA_SYSTEM]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="16"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[CAMERA_SYSTEM]"
+                      name="CAMERA_SYSTEM"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[CAMERA_SYSTEM]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[IMAGE_QUALITY]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[IMAGE_QUALITY]"
+                      name="IMAGE_QUALITY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.Int32"
+                          description="Specifies the input column used as the source of data for the conversion."
+                          name="SourceInputColumnLineageID">#{Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[IMAGE_QUALITY]}</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Data Conversion Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Destination - SO_D_SeeOtter"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[SO].[SO_D_SeeOtter]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  connectionManagerRefId="Package.ConnectionManagers[DestinationConnectionOLEDB]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageID]"
+                      cachedDataType="i4"
+                      cachedName="ImageID"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageID]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageID]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[PHOTO_TIMESTAMP]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="PHOTO_TIMESTAMP"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[PHOTO_TIMESTAMP]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[PHOTO_TIMESTAMP]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[FilePath]"
+                      cachedDataType="wstr"
+                      cachedLength="128"
+                      cachedName="FilePath"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[FilePath]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FilePath]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[LATITUDE_WGS84]"
+                      cachedDataType="r8"
+                      cachedName="LATITUDE_WGS84"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[LATITUDE_WGS84]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LATITUDE_WGS84]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[LONGITUDE_WGS84]"
+                      cachedDataType="r8"
+                      cachedName="LONGITUDE_WGS84"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[LONGITUDE_WGS84]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[LONGITUDE_WGS84]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ALTITUDE]"
+                      cachedDataType="i4"
+                      cachedName="ALTITUDE"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ALTITUDE]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ALTITUDE]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner1Lat]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner1Lat"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner1Lat]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner1Lon]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner1Lon"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner1Lon]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner1Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner2Lat]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner2Lat"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner2Lat]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner2Lon]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner2Lon"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner2Lon]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner2Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner3Lat]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner3Lat"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner3Lat]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner3Lon]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner3Lon"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner3Lon]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner3Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner4Lat]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner4Lat"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner4Lat]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lat]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[ImageCorner4Lon]"
+                      cachedDataType="r8"
+                      cachedName="ImageCorner4Lon"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner4Lon]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[ImageCorner4Lon]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[VALIDATED_BY]"
+                      cachedDataType="wstr"
+                      cachedLength="3"
+                      cachedName="VALIDATED_BY"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[VALIDATED_BY]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[VALIDATED_BY]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[COUNT_ADULT]"
+                      cachedDataType="i4"
+                      cachedName="COUNT_ADULT"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[COUNT_ADULT]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_ADULT]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[COUNT_PUP]"
+                      cachedDataType="i4"
+                      cachedName="COUNT_PUP"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[COUNT_PUP]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_PUP]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[GSD]"
+                      cachedDataType="r8"
+                      cachedName="GSD"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[GSD]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[GSD]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[Width_m]"
+                      cachedDataType="r8"
+                      cachedName="Width_m"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Width_m]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Width_m]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[Height_m]"
+                      cachedDataType="r8"
+                      cachedName="Height_m"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Height_m]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Height_m]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[Coverage_sqkm]"
+                      cachedDataType="r8"
+                      cachedName="Coverage_sqkm"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Coverage_sqkm]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Coverage_sqkm]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[Transect]"
+                      cachedDataType="wstr"
+                      cachedLength="20"
+                      cachedName="Transect"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Transect]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[Transect]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[FLOWN_BY]"
+                      cachedDataType="wstr"
+                      cachedLength="3"
+                      cachedName="FLOWN_BY"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[FLOWN_BY]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[FLOWN_BY]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[SeeOtter_VERSION]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="SeeOtter_VERSION"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[SeeOtter_VERSION]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SeeOtter_VERSION]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[SURVEY_TYPE]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="SURVEY_TYPE"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[SURVEY_TYPE]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[SURVEY_TYPE]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[CAMERA_SYSTEM]"
+                      cachedDataType="wstr"
+                      cachedLength="16"
+                      cachedName="CAMERA_SYSTEM"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[CAMERA_SYSTEM]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[CAMERA_SYSTEM]" />
+                    <inputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].Columns[IMAGE_QUALITY]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="IMAGE_QUALITY"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[IMAGE_QUALITY]"
+                      lineageId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output].Columns[IMAGE_QUALITY]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageID]"
+                      dataType="i4"
+                      name="ImageID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[PHOTO_TIMESTAMP]"
+                      dataType="dbTimeStamp"
+                      name="PHOTO_TIMESTAMP" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[FilePath]"
+                      dataType="wstr"
+                      length="128"
+                      name="FilePath" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[LATITUDE_WGS84]"
+                      dataType="r8"
+                      name="LATITUDE_WGS84" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[LONGITUDE_WGS84]"
+                      dataType="r8"
+                      name="LONGITUDE_WGS84" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ALTITUDE]"
+                      dataType="i4"
+                      name="ALTITUDE" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner1Lat]"
+                      dataType="r8"
+                      name="ImageCorner1Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner1Lon]"
+                      dataType="r8"
+                      name="ImageCorner1Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner2Lat]"
+                      dataType="r8"
+                      name="ImageCorner2Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner2Lon]"
+                      dataType="r8"
+                      name="ImageCorner2Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner3Lat]"
+                      dataType="r8"
+                      name="ImageCorner3Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner3Lon]"
+                      dataType="r8"
+                      name="ImageCorner3Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner4Lat]"
+                      dataType="r8"
+                      name="ImageCorner4Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[ImageCorner4Lon]"
+                      dataType="r8"
+                      name="ImageCorner4Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[VALIDATED_BY]"
+                      dataType="wstr"
+                      length="3"
+                      name="VALIDATED_BY" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[COUNT_ADULT]"
+                      dataType="i4"
+                      name="COUNT_ADULT" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[COUNT_PUP]"
+                      dataType="i4"
+                      name="COUNT_PUP" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[GSD]"
+                      dataType="r8"
+                      name="GSD" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Width_m]"
+                      dataType="r8"
+                      name="Width_m" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Height_m]"
+                      dataType="r8"
+                      name="Height_m" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Coverage_sqkm]"
+                      dataType="r8"
+                      name="Coverage_sqkm" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[Transect]"
+                      dataType="wstr"
+                      length="20"
+                      name="Transect" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[FLOWN_BY]"
+                      dataType="wstr"
+                      length="3"
+                      name="FLOWN_BY" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[SeeOtter_VERSION]"
+                      dataType="wstr"
+                      length="10"
+                      name="SeeOtter_VERSION" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[SURVEY_TYPE]"
+                      dataType="wstr"
+                      length="10"
+                      name="SURVEY_TYPE" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[CAMERA_SYSTEM]"
+                      dataType="wstr"
+                      length="16"
+                      name="CAMERA_SYSTEM" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input].ExternalColumns[IMAGE_QUALITY]"
+                      dataType="wstr"
+                      length="10"
+                      name="IMAGE_QUALITY" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv"
+              componentClassID="Microsoft.FlatFileSource"
+              contactInfo="Flat File Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+              description="Flat File Source"
+              localeId="1033"
+              name="Source - SO_D_20220812_R_csv"
+              usesDispositions="true"
+              version="1">
+              <properties>
+                <property
+                  dataType="System.Boolean"
+                  description="Specifies whether zero-length columns are treated as null."
+                  name="RetainNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of an output column containing the file name. If no name is specified, no output column containing the file name will be generated."
+                  name="FileNameColumnName"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Connections[FlatFileConnection]"
+                  connectionManagerID="Package.ConnectionManagers[SourceConnectionFlatFile]"
+                  connectionManagerRefId="Package.ConnectionManagers[SourceConnectionFlatFile]"
+                  name="FlatFileConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output]"
+                  name="Flat File Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageID]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageID]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageID]"
+                      name="ImageID"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[PHOTO_TIMESTAMP]"
+                      dataType="date"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[PHOTO_TIMESTAMP]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[PHOTO_TIMESTAMP]"
+                      name="PHOTO_TIMESTAMP"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FilePath]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[FilePath]"
+                      length="128"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FilePath]"
+                      name="FilePath"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LATITUDE_WGS84]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[LATITUDE_WGS84]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LATITUDE_WGS84]"
+                      name="LATITUDE_WGS84"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LONGITUDE_WGS84]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[LONGITUDE_WGS84]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[LONGITUDE_WGS84]"
+                      name="LONGITUDE_WGS84"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ALTITUDE]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ALTITUDE]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ALTITUDE]"
+                      name="ALTITUDE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lat]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner1Lat]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lat]"
+                      name="ImageCorner1Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lon]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner1Lon]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner1Lon]"
+                      name="ImageCorner1Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lat]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner2Lat]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lat]"
+                      name="ImageCorner2Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lon]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner2Lon]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner2Lon]"
+                      name="ImageCorner2Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lat]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner3Lat]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lat]"
+                      name="ImageCorner3Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lon]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner3Lon]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner3Lon]"
+                      name="ImageCorner3Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lat]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner4Lat]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lat]"
+                      name="ImageCorner4Lat"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lon]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner4Lon]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[ImageCorner4Lon]"
+                      name="ImageCorner4Lon"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[VALIDATED_BY]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[VALIDATED_BY]"
+                      length="3"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[VALIDATED_BY]"
+                      name="VALIDATED_BY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_ADULT]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[COUNT_ADULT]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_ADULT]"
+                      name="COUNT_ADULT"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_PUP]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[COUNT_PUP]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[COUNT_PUP]"
+                      name="COUNT_PUP"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[GSD]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[GSD]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[GSD]"
+                      name="GSD"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Width_m]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Width_m]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Width_m]"
+                      name="Width_m"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Height_m]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Height_m]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Height_m]"
+                      name="Height_m"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Coverage_sqkm]"
+                      dataType="r4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Coverage_sqkm]"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Coverage_sqkm]"
+                      name="Coverage_sqkm"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Transect]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Transect]"
+                      length="20"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[Transect]"
+                      name="Transect"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FLOWN_BY]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[FLOWN_BY]"
+                      length="3"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[FLOWN_BY]"
+                      name="FLOWN_BY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SeeOtter_VERSION]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[SeeOtter_VERSION]"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SeeOtter_VERSION]"
+                      name="SeeOtter_VERSION"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SURVEY_TYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[SURVEY_TYPE]"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[SURVEY_TYPE]"
+                      name="SURVEY_TYPE"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[CAMERA_SYSTEM]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[CAMERA_SYSTEM]"
+                      length="16"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[CAMERA_SYSTEM]"
+                      name="CAMERA_SYSTEM"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[IMAGE_QUALITY]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[IMAGE_QUALITY]"
+                      length="10"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].Columns[IMAGE_QUALITY]"
+                      name="IMAGE_QUALITY"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the column uses the faster, locale-neutral parsing routines."
+                          name="FastParse">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the data is in binary format."
+                          name="UseBinaryFormat">false</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageID]"
+                      dataType="i4"
+                      name="ImageID" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[PHOTO_TIMESTAMP]"
+                      dataType="date"
+                      name="PHOTO_TIMESTAMP" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[FilePath]"
+                      codePage="1252"
+                      dataType="str"
+                      length="128"
+                      name="FilePath" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[LATITUDE_WGS84]"
+                      dataType="r4"
+                      name="LATITUDE_WGS84" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[LONGITUDE_WGS84]"
+                      dataType="r4"
+                      name="LONGITUDE_WGS84" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ALTITUDE]"
+                      dataType="i4"
+                      name="ALTITUDE" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner1Lat]"
+                      dataType="r4"
+                      name="ImageCorner1Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner1Lon]"
+                      dataType="r4"
+                      name="ImageCorner1Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner2Lat]"
+                      dataType="r4"
+                      name="ImageCorner2Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner2Lon]"
+                      dataType="r4"
+                      name="ImageCorner2Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner3Lat]"
+                      dataType="r4"
+                      name="ImageCorner3Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner3Lon]"
+                      dataType="r4"
+                      name="ImageCorner3Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner4Lat]"
+                      dataType="r4"
+                      name="ImageCorner4Lat" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[ImageCorner4Lon]"
+                      dataType="r4"
+                      name="ImageCorner4Lon" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[VALIDATED_BY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="VALIDATED_BY" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[COUNT_ADULT]"
+                      dataType="i4"
+                      name="COUNT_ADULT" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[COUNT_PUP]"
+                      dataType="i4"
+                      name="COUNT_PUP" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[GSD]"
+                      dataType="r4"
+                      name="GSD" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Width_m]"
+                      dataType="r4"
+                      name="Width_m" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Height_m]"
+                      dataType="r4"
+                      name="Height_m" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Coverage_sqkm]"
+                      dataType="r4"
+                      name="Coverage_sqkm" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[Transect]"
+                      codePage="1252"
+                      dataType="str"
+                      length="20"
+                      name="Transect" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[FLOWN_BY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="FLOWN_BY" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[SeeOtter_VERSION]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SeeOtter_VERSION" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[SURVEY_TYPE]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="SURVEY_TYPE" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[CAMERA_SYSTEM]"
+                      codePage="1252"
+                      dataType="str"
+                      length="16"
+                      name="CAMERA_SYSTEM" />
+                    <externalMetadataColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output].ExternalColumns[IMAGE_QUALITY]"
+                      codePage="1252"
+                      dataType="str"
+                      length="10"
+                      name="IMAGE_QUALITY" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output]"
+                  isErrorOut="true"
+                  name="Flat File Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      codePage="1252"
+                      dataType="text"
+                      description="Flat File Source Error Output Column"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[Flat File Source Error Output Column]"
+                      name="Flat File Source Error Output Column" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Data Flow Task 1.Paths[Data Conversion Output]"
+              endId="Package\Data Flow Task 1\Destination - SO_D_SeeOtter.Inputs[Destination Input]"
+              name="Data Conversion Output"
+              startId="Package\Data Flow Task 1\Data Conversion 0 - 0.Outputs[Data Conversion Output]" />
+            <path
+              refId="Package\Data Flow Task 1.Paths[Flat File Source Output]"
+              endId="Package\Data Flow Task 1\Data Conversion 0 - 0.Inputs[Data Conversion Input]"
+              name="Flat File Source Output"
+              startId="Package\Data Flow Task 1\Source - SO_D_20220812_R_csv.Outputs[Flat File Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+</DTS:Executable>
