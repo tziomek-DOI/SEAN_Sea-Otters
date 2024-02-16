@@ -161,8 +161,6 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
 
         while ($dr.Read()) {
 
-            [string]$line = ""
-
             # Write the column headers
             if ($firstLine -eq $true) {
                 for ($i = 0; $i -lt $dr.FieldCount; $i++) {
@@ -189,7 +187,7 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
 
             # write to stream
             [void]$streamWriter.WriteLine($sb.ToString())
-            $sb.Clear()
+            [void]$sb.Clear()
 
         } # end while through reader
         $dr.Close()
