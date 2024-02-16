@@ -1,6 +1,3 @@
-USE [SEAN_Staging_2017]
-GO
-
 /****** Object:  StoredProcedure [SO].[sp_load_CSVs_into_temp_table]    Script Date: 2/9/2024 2:49:10 PM 
  *
  * AUTHOR: tziomek
