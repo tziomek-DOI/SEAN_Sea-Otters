@@ -1,0 +1,8 @@
+/*
+ * Retroactively update the CAMERA used in the 2017-2019 surveys.
+ */
+
+UPDATE [SO].[SO_D]
+SET CAMERA_ID = (SELECT ID FROM [SO].[CAMERA] WHERE MAKE = 'NIKON' and MODEL = 'D810')
+WHERE DATEPART(year, PHOTO_TIMESTAMP_AK_LOCAL) < 2022
+AND CAMERA_ID IS NULL
