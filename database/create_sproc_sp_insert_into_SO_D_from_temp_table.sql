@@ -1,4 +1,4 @@
-USE [SEAN_Staging_2017]
+USE [SEAN_Staging_TEST_2017]
 GO
 
 /****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 2/9/2024 3:45:42 PM ******/
@@ -7,9 +7,6 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
 
 -- ===============================================================================
 -- Author:		Thomas Ziomek
@@ -26,6 +23,10 @@ GO
 --	TZ	20240117:
 --	Added TRANSECT column to the SQL.
 --	Removed database qualifiers from SQL 'FROM' clauses
+--
+-- TZ	20240214
+-- Renamed input table SO_D_2022 to SO_D_SeeOtter
+-- Changed the default quality flag ID from 4 to 5 to match updated table values.
 --
 -- TODO:
 -- Currently no SeeOtter support for KELP_PRESENT, LAND_PRESENT, IMAGE_QUALITY.
@@ -91,7 +92,7 @@ BEGIN
 			END
 			-- Protocol will also be an input param from a stored proc.
 			,(SELECT p.ID FROM [SEAN].tbl_protocol p WHERE p.protocol = @Protocol) --AS PROTOCOL_ID
-			,4 -- indicates record has not yet been QC'd...we can update this during validation.
+			,5 -- indicates 'Raw' record which has not yet been QC'd...we can update this during validation.
 			,SUBSTRING(s.FilePath, PATINDEX('%%\[01]_[0]_[0]_%%', s.FilePath)+1,LEN(s.FilePath)-PATINDEX('%%\[01]_[0]_[0]_%%', s.FilePath)) --AS original_filename
 			,(SELECT e.ID FROM [SO].[EMPLOYEE] e WHERE e.INITIALS = s.FLOWN_BY) --AS FLOWN_BY_ID
 			,(SELECT c.ID FROM [SO].[CAMERA] c WHERE c.DESCRIPTION = s.CAMERA_SYSTEM) --AS CAMERA_ID
@@ -104,7 +105,7 @@ BEGIN
 			,6
 			,GETDATE()
 			,6
-		FROM [SO].[SO_D_2022] s
+		FROM [SO].[SO_D_SeeOtter] s
 		WHERE SUBSTRING(s.SURVEY_TYPE,1,1) = @Survey_Type;
 	
 		SET @Num_Recs = @@ROWCOUNT;
