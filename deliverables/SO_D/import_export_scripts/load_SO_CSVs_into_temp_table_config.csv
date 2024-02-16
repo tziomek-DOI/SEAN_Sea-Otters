@@ -1,7 +1,7 @@
 csv_dir,\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022\
 server_name,inpglbafs03
-database_name,SEAN_Staging_2017
+database_name,SEAN_Staging_TEST_2017
 sproc_name,SO.sp_load_CSVs_into_temp_table
 ssis_folder,SO_D_importer_folder
 ssis_project,CSV_SO_D_importer
-ssis_package,CSV_to_SO_D_2022_w_transect.dtsx
+ssis_package,CSV_to_SO_D_SeeOtter.dtsx
