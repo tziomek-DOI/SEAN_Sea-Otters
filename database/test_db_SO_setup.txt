@@ -48,7 +48,6 @@ Needs done in TEST (and then PROD) - Perform in this sequence:
 	c. 'drop_create_sproc_sp_insert_into_SO_D_from_temp_table.sql' # Need to edit since nothing to drop
 	d. 'create_sproc_SO.load_CSVs_into_temp_table.sql'
 	
-TODO: Start here to finish prod setup/test/val:
 6. Follow the (draft SOP) to execute the SSIS package which loads the raw CSV files into the SO_D_SeeOtter (temp) table.
 	# This SSIS package was created using the SSMS import/export wizard.
 	# 2/14/2024 - Created new (renamed) SSIS package named CSV_to_SO_D_SeeOtter.dtsx. Script added to github, can be imported into SQL Server.
@@ -57,11 +56,12 @@ TODO: Start here to finish prod setup/test/val:
 	# TODO: Make batch file or some other way to launch this?
 	a. Set the working directory correctly is key. The script must be launched while in it's directory, so, if the file is at c:\temp\sp_insert_into_SO_D_from_temp_table,
 	   then user should open PowerShell, then cd c:\temp and then run the script.
+	   C:\dev\projects\SEAN_Sea-Otters\deliverables\SO_D\import_export_scripts\load_SO_CSVs_into_temp_table.ps1 -Config_file_dir C:\dev\projects\SEAN_Sea-Otters\deliverables\SO_D\import_export_scripts
 ***	UPDATE: Successfully tested on 1/16/24. 
 	- Added 'Transect' column to Optimal and Abundance files to match Random
 	- Moved SSIS configuration parameters from sproc to ps script.
 	- Use this for csv (adjust as needed):
-		C:\Users\tziomek\OneDrive - DOI\dev\Powershell\SO_D\load_SO_CSVs_into_temp_table_config.csv
+		C:\dev\projects\SEAN_Sea-Otters\deliverables\SO_D\import_export_scripts\load_SO_CSVs_into_temp_table_config.csv
 	
 7. Execute stored procedure 'sp_insert_into_SO_D_from_temp_table' which transforms and loads the data from temp to the new SO_D table:
 	a. This is best done by executing PowerShell script 'insert_into_SO_D_from_temp_table.ps1' (but can also be done from SSMS directly). Requires input parameters. Example:
@@ -69,6 +69,7 @@ TODO: Start here to finish prod setup/test/val:
 	# Note sproc was altered with Transect column added; new 'alter' version of sproc script created. Create script needs edited.
 	# Could make a CSV with input parameters like the other one.
 	
+TODO: Start here to finish prod setup/test/val:
 	
 8. Validation here:
 	- Use the db to validate and then update the QUALITY_FLAG column
