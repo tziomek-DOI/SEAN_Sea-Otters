@@ -1,12 +1,4 @@
-USE [SEAN_Staging_2017]
-GO
-
-/****** 
-	Object:  View [SO].[view_SO_D_allrecs_w_lookups]    
-	Script Date: 1/18/2024 1:35:21 PM 
-
-	TZ 1/18/2024: Added TRANSECT column to SELECT.	
-******/
+/****** Object:  View [SO].[view_SO_D_allrecs_w_lookups]    Script Date: 2/21/2024 4:19:42 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -14,13 +6,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-
-CREATE OR ALTER VIEW [SO].[view_SO_D_allrecs_w_lookups]
+CREATE OR ALTER   VIEW [SO].[view_SO_D_allrecs_w_lookups]
 AS
-SELECT        sod.PHOTO_FILE_NAME, FORMAT(sod.PHOTO_TIMESTAMP_UTC, 'yyyy-MM-dd HH:mm:ss') AS PHOTO_TIMESTAMP_UTC, FORMAT(sod.PHOTO_TIMESTAMP_AK_Local, 'yyyy-MM-dd HH:mm:ss') AS PHOTO_TIMESTAMP_AK_Local, sod.LATITUDE_WGS84, sod.LONGITUDE_WGS84, sod.ALTITUDE, st.SURVEY_TYPE, sod.COUNT_ADULT, 
-                         sod.COUNT_PUP, k.KELP_PRESENT, l.LAND_PRESENT, i.IMAGE_QUALITY, e.FULL_NAME + ' ' + e.AFFILIATION AS COUNTED_BY, FORMAT(sod.COUNTED_DATE, 'yyyy-MM-dd') AS COUNTED_DATE, p.protocol, 
-                         q.DEFINITION AS QUALITY_FLAG, sod.ORIGINAL_FILENAME, f.INITIALS AS FLOWN_BY, c.DESCRIPTION AS CAMERA_SYSTEM, sod.TRANSECT, v.INITIALS AS VALIDATED_BY, FORMAT(sod.DATE_CREATED, 'yyyy-MM-dd HH:mm:ss') 
-                         AS DATE_CREATED, cr.INITIALS AS CREATED_BY, FORMAT(sod.DATE_LAST_UPDATED, 'yyyy-MM-dd HH:mm:ss') AS DATE_LAST_UPDATED, up.INITIALS AS LAST_UPDATED_BY
+SELECT        sod.PHOTO_FILE_NAME, FORMAT(sod.PHOTO_TIMESTAMP_UTC, 'yyyy-MM-dd HH:mm:ss') AS PHOTO_TIMESTAMP_UTC, FORMAT(sod.PHOTO_TIMESTAMP_AK_LOCAL, 'yyyy-MM-dd HH:mm:ss') 
+                         AS PHOTO_TIMESTAMP_AK_LOCAL, sod.LATITUDE_WGS84, sod.LONGITUDE_WGS84, sod.ALTITUDE, st.SURVEY_TYPE, sod.COUNT_ADULT, sod.COUNT_PUP, k.KELP_PRESENT, l.LAND_PRESENT, i.IMAGE_QUALITY, 
+                         (CASE WHEN e.INITIALS = 'SO' THEN (e.FULL_NAME + ' ' + e.AFFILIATION) ELSE e.INITIALS END) AS COUNTED_BY, FORMAT(sod.COUNTED_DATE, 'yyyy-MM-dd') AS COUNTED_DATE, p.protocol AS PROTOCOL, q.QUALITY_FLAG, 
+                         sod.ORIGINAL_FILENAME, f.INITIALS AS FLOWN_BY, c.MAKE + ' ' + c.MODEL AS CAMERA_SYSTEM, sod.TRANSECT, v.INITIALS AS VALIDATED_BY, FORMAT(sod.DATE_CREATED, 'yyyy-MM-dd HH:mm:ss') AS DATE_CREATED, 
+                         cr.INITIALS AS CREATED_BY, FORMAT(sod.DATE_LAST_UPDATED, 'yyyy-MM-dd HH:mm:ss') AS DATE_LAST_UPDATED, up.INITIALS AS LAST_UPDATED_BY
 FROM            SO.SO_D AS sod INNER JOIN
                          SO.SURVEY_TYPE AS st ON sod.SURVEY_TYPE_ID = st.ID INNER JOIN
                          SO.EMPLOYEE AS e ON sod.COUNTED_BY_ID = e.ID INNER JOIN
@@ -152,7 +144,7 @@ Begin DesignProperties =
             Begin Extent = 
                Top = 6
                Left = 921
-               Bottom = 102
+               Bottom = 163
                Right = 1091
             End
             DisplayFlags = 280
@@ -296,7 +288,7 @@ Begin DesignProperties =
             Begin Extent = 
                Top = 6
                Left = 921
-               Bottom = 102
+               Bottom = 163
                Right = 1091
             End
             DisplayFlags = 280
@@ -329,10 +321,10 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'MS_DiagramPane2' , N'SCHEMA',N'SO', N'VIEW',N'view_SO_D_allrecs_w_lookups', NULL,NULL))
 	EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'         Begin Table = "v"
             Begin Extent = 
-               Top = 102
-               Left = 921
-               Bottom = 232
-               Right = 1091
+               Top = 188
+               Left = 915
+               Bottom = 318
+               Right = 1085
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -393,6 +385,34 @@ IF NOT EXISTS (SELECT * FROM sys.fn_listextendedproperty(N'MS_DiagramPane2' , N'
    End
    Begin DataPane = 
       Begin ParameterDefaults = ""
+      End
+      Begin ColumnWidths = 26
+         Width = 284
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
       End
    End
    Begin CriteriaPane = 
@@ -418,10 +438,10 @@ ELSE
 BEGIN
 	EXEC sys.sp_updateextendedproperty @name=N'MS_DiagramPane2', @value=N'         Begin Table = "v"
             Begin Extent = 
-               Top = 102
-               Left = 921
-               Bottom = 232
-               Right = 1091
+               Top = 188
+               Left = 915
+               Bottom = 318
+               Right = 1085
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -482,6 +502,34 @@ BEGIN
    End
    Begin DataPane = 
       Begin ParameterDefaults = ""
+      End
+      Begin ColumnWidths = 26
+         Width = 284
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
+         Width = 1500
       End
    End
    Begin CriteriaPane = 
