@@ -1,6 +1,3 @@
-USE [SEAN_Staging_TEST_2017]
-GO
-
 /****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 2/9/2024 3:45:42 PM ******/
 SET ANSI_NULLS ON
 GO
