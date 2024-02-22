@@ -1,5 +1,3 @@
-USE [SEAN_Staging_TEST_2017]
-GO
 
 /****** Object:  StoredProcedure [SO].[sp_validate_SO_D_table]    Script Date: 2/21/2024 2:54:59 PM ******/
 SET ANSI_NULLS ON
@@ -7,8 +5,6 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
 
 -- =============================================
 -- Author:		Thomas Ziomek
