@@ -28,22 +28,28 @@ Needs done in TEST (and then PROD) - Perform in this sequence:
 1a. Add a record to tbl_protocol for the expected SO protocol version (such as, SO-2024.1).
 2. Run script 'drop_create_SO_tables.sql' to create all the new tables, populate the lookup tables, and create relationships.
    # For PROD we can probably use this as well, since nothing was ever deployed to PROD for the new SO stuff (built in 2020). Script will check for existence and should work.
-3. Run 'insert_2019_table_into_new_SO_D_table.sql'
+3. Create and populate the pre-SeeOtter table (SO_D_2019): 
+	# DEPRECATED - Run 'insert_2019_table_into_new_SO_D_table.sql'
+	# UPDATE 2/21/2024:
+	- Scripted the SO_D_2019 table with data to file SO.SO_D_2019.Table.sql. Run this on the database for initial creation.
 	# 46832 rows affected (result of insert)
 	# Note for PROD, need(ed) to load the 2019 records from TEST since this was not rolled out to a production table at that time.
 		The 2019 and prior deliverable was created from CountThings, not the database.
 		- Be mindful of the three database name references in the script to ensure correct loading.
 		- This should be a one-time operation for TEST and PROD.
-4. Run 'create_table_SO.SO_D_SeeOtter.sql'	
+4. DEPRECATED - Run 'create_table_SO.SO_D_SeeOtter.sql'	
 	# This is the "temp" table used to load the raw SeeOtter CSVs.
+	# This was added to script 'drop_create_SO_tables.sql' and should have been created in step 2.
 5. Run scripts:
 	a. 'create_functions_DST_start-end_dates.sql'
 	For the sprocs, make sure the alter scripts and drop/create are matching before creating!
 	b. 'drop_create_view_SO_D_allrecs_w_lookups.sql' # Need to edit since nothing to drop
+		## UPDATE - use 'create_alter_view_SO_D_allrecs_w_lookups.sql'
 	c. 'drop_create_sproc_sp_insert_into_SO_D_from_temp_table.sql' # Need to edit since nothing to drop
 	d. 'create_sproc_SO.load_CSVs_into_temp_table.sql'
+	
+TODO: Start here to finish prod setup/test/val:
 6. Follow the (draft SOP) to execute the SSIS package which loads the raw CSV files into the SO_D_SeeOtter (temp) table.
-	# Note that the SSIS package retains the "SO_D_2022" in its name due to the inability to rename the package (must be destroyed and re-created).
 	# This SSIS package was created using the SSMS import/export wizard.
 	# 2/14/2024 - Created new (renamed) SSIS package named CSV_to_SO_D_SeeOtter.dtsx. Script added to github, can be imported into SQL Server.
 	#
@@ -62,11 +68,25 @@ Needs done in TEST (and then PROD) - Perform in this sequence:
 	.\insert_into_SO_D_from_temp_table.ps1 -Folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022" -Filter *.csv -server inpglbafs03 -database SEAN_Staging_TEST_2017 -protocol SO-2024.1
 	# Note sproc was altered with Transect column added; new 'alter' version of sproc script created. Create script needs edited.
 	# Could make a CSV with input parameters like the other one.
-8. Export the deliverable submission candidate CSV files from the SO_D table using PowerShell script 'export_CSVs_from_database'. Example syntax:
+	
+	
+8. Validation here:
+	- Use the db to validate and then update the QUALITY_FLAG column
+	- Create a SO_D_VALIDATION table to store results of the validation - DONE - SO.SO_D_VALIDATION, fired by validate_SO_D_table.ps1 script.
+	## Need to create on database first time!
+	PHOTO_FILE_NAME
+	PHOTO_TIMESTAMP_AK_Local
+	ERROR_TYPE - Mandatory/Optional
+	ERROR_DETAILS - write message of that did not pass validation and a reason
+	- Returns number of mandatory and optional sum...need to work on this. Could requery the table from the PS script.
+	validation_date (date this was run) - could add this later...
+	- Do we want to update this for subsequent validations?
+	
+9. Export the deliverable submission candidate CSV files from the SO_D table using PowerShell script 'export_CSVs_from_database'. Example syntax:
 	.\export_CSVs_from_database.ps1 -Output_folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\SO_D_exports" -server_name "inpglbafs03" -database_name "SEAN_Staging_TEST_2017" -survey_year 2022
 		# This loop was created on 1/18/24 and successfully exported all three files in one run.
 	# We could make a config file, just name/value pairs in a txt or json, instead of command line params. This is better!
-9. From here, the SOP should be followed for the standard data management procedures to validate and certify the files.
+10. From here, the SOP should be followed for the standard data management procedures to validate and certify the files.
 	# TODO: Finish updates and testing of website validation code.
 	# Need to add criteria for:
 	- PHOTO_TIMESTAMP_AK_Local (if we keep this in the CSV)
