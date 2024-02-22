@@ -47,14 +47,14 @@ function ExecuteStoredProcedure {
         $sqlconn.Open()
         $retval = $sqlcmd.ExecuteNonQuery()
         Write-Host "Query retval: " $retval
-        Write-Host "Num recs: " $p_num_recs.Value
+        Write-Host "Number of error records: " $p_num_recs.Value
         if ($retval -eq -1) {
-            Write-Host "Proc error code: $($p_error_code.Value)"
+            Write-Host "Stored procedure error code: $($p_error_code.Value)"
         }
 
     }
     catch [Exception] {
-        Write-Error "Proc error code: $($p_error_code.Value)"
+        Write-Error "Stored proc error code: $($p_error_code.Value)"
         Write-Error $_.Exception.Message
         Write-Error ($_.Exception | Format-List -Force | Out-String) -ErrorAction Continue
         Write-Error ($_.InvocationInfo | Format-List -Force | Out-String) -ErrorAction Continue
