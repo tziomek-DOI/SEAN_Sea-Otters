@@ -4,9 +4,6 @@
  * The pre-2022 data is in AK local. Although it's ideal to code dynamically, since this is a one-time
  * data load and all data is in DST, we can avoid the complexity this time.
  */
-use [SEAN_Staging_TEST_2017]
-GO
-
 BEGIN
     -- Insert statements for procedure here
 	INSERT INTO [SO].[SO_D]
