@@ -67,6 +67,12 @@ $sqlcmd = New-Object System.Data.SqlClient.SqlCommand
 try {
     #$filePath = [System.IO.Path]::GetDirectoryName($temp)
     #$fileName = [System.IO.Path]::GetFileName($temp)
+
+    # Delete the exif csv file if it exists:
+    if (Test-Path "$($output_folder)\SO_C_$($survey_year)_EXIF.CSV") {
+        Remove-Item "$($output_folder)\SO_C_$($survey_year)_EXIF.CSV" -Verbose
+    }
+
     $newFile = New-Item -Path $output_folder -Name "SO_C_$($survey_year)_EXIF.CSV" -ItemType File
 
     # open a writable FileStream
@@ -76,11 +82,13 @@ try {
     $streamWriter = [System.IO.StreamWriter]::new($fileStream)
 
     # Write column headers:
-    [void]$streamWriter.WriteLine("PHOTO_FILENAME,SURVEY_YEAR,SURVEY_TYPE,EXIF_PHOTO_DATE,NOTES")
+    [void]$streamWriter.WriteLine("ID,PHOTO_FILENAME,SURVEY_YEAR,SURVEY_TYPE,EXIF_PHOTO_DATE,NOTES")
 
     $sqlcmd.CommandType = 'Text'
     $sqlcmd.Connection = $sqlconn
     $sqlcmd.CommandTimeout = 0
+
+    $rowid = 0
 
     # Loop through the SO_C subdirectories, then loop through all the photos, and save
     # the file EXIF data into the output .CSV file:
@@ -114,13 +122,20 @@ try {
                 # Replace the date colons with dashes
                 [void]$sb.Clear()
                 [void]$sb.Append($decoded)
-                $sb[$decoded.IndexOf($decoded.Substring(4,1))] = '-'
-                $sb[$decoded.IndexOf($decoded.Substring(7,1))] = '-'
+
+                # For some reason, this "cleaner" code (using that term loosely) worked for the first
+                # dash, but not the second one. Sleep deprivation? The new version works.
+                #$sb[$decoded.IndexOf($decoded.Substring(4,1))] = '-'
+                #Write-Host "char at index 7 = $($decoded.Substring(7,1))..."
+                #$sb[$decoded.IndexOf($decoded.Substring(7,1))] = '-'
+                $sb[4] = '-'
+                $sb[7] = '-'
                 $date_created = $sb.ToString()
                 [void]$sb.Clear()
                 Write-Host "$($photo) created on $($date_created)"
 
-                [void]$sb.AppendLine("$($photo.Name),$($survey_year),$($survey_type),$($date_created),")
+                $rowid++
+                [void]$streamWriter.WriteLine("$($rowid),$($photo.Name),$($survey_year),$($survey_type),$($date_created),NULL")
 
             } catch {
                 "ERROR with photo $($photo.FullName): $($_.Exception.Message)" | Out-Default
@@ -133,16 +148,17 @@ try {
     } # end of loop through so_c dirs
 
     $streamWriter.Close()
-
+    $streamWriter.Dispose()
 
     # Do a bulk insert of the CSV file into table SO.SO_C_PHOTO_INFO
     $sqlcmd.CommandType = 'Text'
     $sqlquery =  @"
     BULK INSERT [SO].[SO_C_PHOTO_INFO]
-    FROM $($newFile)
+    FROM '$($newFile)'
     WITH (FORMAT = 'CSV'
     ,FIRSTROW = 2
-    ,FIELDTERMINATOR = ',');
+    ,FIELDTERMINATOR = ','
+    ,ROWTERMINATOR = '0x0a');
 "@
     Write-Host "query: $($sqlquery)"
     $sqlcmd.CommandText = $sqlquery
