@@ -1,4 +1,4 @@
-/****** Object:  Table [SO].[SO_C_PHOTO_INFO]    Script Date: 2/28/2024 12:45:41 PM ******/
+/****** Object:  Table [SO].[SO_C_PHOTO_INFO]    Script Date: 2/29/2024 1:00:38 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -9,7 +9,7 @@ CREATE TABLE [SO].[SO_C_PHOTO_INFO](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[PHOTO_FILENAME] [nvarchar](25) NOT NULL,
 	[SURVEY_YEAR] [int] NOT NULL,
-	[SURVEY_TYPE] [int] NOT NULL,
+	[SURVEY_TYPE] [nvarchar](15) NOT NULL,
 	[EXIF_PHOTO_DATE] [datetime] NOT NULL,
 	[NOTES] [nvarchar](255) NULL,
  CONSTRAINT [PK_SO_C_PHOTO_INFO] PRIMARY KEY CLUSTERED 
