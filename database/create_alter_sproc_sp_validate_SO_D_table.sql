@@ -1,17 +1,32 @@
+USE [SEAN_Staging_2017]
+GO
 
-/****** Object:  StoredProcedure [SO].[sp_validate_SO_D_table]    Script Date: 2/21/2024 2:54:59 PM ******/
+/****** Object:  StoredProcedure [SO].[sp_validate_SO_D_table]    Script Date: 3/1/2024 3:40:42 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
+
 -- =============================================
 -- Author:		Thomas Ziomek
 -- Create date: 2024-02-14
 -- Description:	Validates the columns in the SO_D table, then updates the QUALITY_FLAG with the result.
+--
+-- Usage Notes:
+-- One noteworthy prerequisite is this procedure expects that the "extract_exif_info" powershell script
+-- has been run and the SO_C_PHOTO_INFO table has been updated with the info from the SO_C_2022_EXIF.CSV
+-- file, which was created by the powershell script.
+--
+-- Updates:
+-- TZ 3/1/24:
+--		Added validation of the photo creation date. Compares the timestamp in the SO_D table for each image
+--		with the EXIF date extracted directly from the photo (in table SO_C_PHOTO_INFO). This check is a good
+--		means to ensure the correct photos were copied into the SO_C.
+--
 -- =============================================
-CREATE OR ALTER     PROCEDURE [SO].[sp_validate_SO_D_table]
+CREATE OR ALTER         PROCEDURE [SO].[sp_validate_SO_D_table]
 	-- Add the parameters for the stored procedure here
 	@Survey_Year		INT
 	--,@Survey_Type_IN	NVARCHAR(9) -- only needed if we pass in a param to filter
@@ -148,6 +163,20 @@ BEGIN
 			BEGIN
 				INSERT INTO [SO].[SO_D_VALIDATION] (PHOTO_FILE_NAME, PHOTO_TIMESTAMP_AK_LOCAL, ERROR_TYPE, ERROR_DETAILS) VALUES (@photo_file_name, @photo_ts_ak, 'Optional', 'Survey month not between May and August.');
 				SET @opt_err_count = @opt_err_count + 1;
+			END;
+
+			/*	
+				Verify photo EXIF date created.
+				Note that the photo_timestamp fields are only set up to the hour and minute, whereas the EXIF pulled the seconds as well.
+				For now, we need to truncate the seconds. We lose a little fidelity here, but the main goal is to detect a more global issue,
+				such as, the builder of the SO_C copied an entire folder incorrectly into one of the SO_C folders. It's less likely that
+				individual files will have been mis-copied.
+			 */
+			IF FORMAT(CONVERT(datetime, @photo_ts_utc), 'yyyy-MM-dd HH:mm') != (SELECT FORMAT([EXIF_PHOTO_DATE], 'yyyy-MM-dd HH:mm') FROM [SO].[SO_C_PHOTO_INFO] WHERE PHOTO_FILENAME = @photo_file_name)
+			BEGIN
+				INSERT INTO [SO].[SO_D_VALIDATION] (PHOTO_FILE_NAME, PHOTO_TIMESTAMP_AK_LOCAL, ERROR_TYPE, ERROR_DETAILS) VALUES (@photo_file_name, @photo_ts_ak, 'Mandatory', 'Timestamp must match EXIF timestamp from table SO_C_PHOTO_INFO.');
+				SET @has_mand_error = 1;
+				SET @mand_err_count = @mand_err_count + 1;
 			END;
 
 			--if (!@photo_ts_ak betweem 2017 and getdate())
