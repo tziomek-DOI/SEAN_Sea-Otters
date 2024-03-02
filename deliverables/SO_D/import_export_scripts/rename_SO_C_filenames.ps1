@@ -22,7 +22,7 @@
     Year the survey was conducted. Will be appended to the so_c_base_folder parameter to build the photos archive directory.
 
     .EXAMPLE
-    \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_C\ -server_name inpglbafs03 -database_name SEAN_Staging_TEST_2017 -survey_year 2022
+    .\rename_SO_C_filenames.ps1 -so_c_base_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_C\ -server_name inpglbafs03 -database_name SEAN_Staging_TEST_2017 -survey_year 2022
 
 #>
 
