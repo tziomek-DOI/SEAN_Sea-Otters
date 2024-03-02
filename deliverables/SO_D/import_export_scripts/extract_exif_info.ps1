@@ -1,18 +1,41 @@
-﻿<# Extract EXIF information from the SO_C folders and load into the database.
+﻿<# 
+    .SYNOPSIS
+    extract_exif_info.ps1
 
-Currently we are only extracting the date photo was taken.
+    .DESCRIPTION
+    Extracts EXIF information from the SO_C photos and loads the info into the database table SO.SO_C_PHOTO_INFO.
+    Currently only extracts the date photo was taken.
 
-UPDATES:
+    .PARAMETER base_folder
+    Set the base directory folder. This should be the SO_C for the desired survey year.
+    There are three subdirs for each survey year of SO_C. The base should be \\inpglbafs03\data\sean_data\work_zone\SO\SO_C\
 
-TZ 2/28/2024: 
-- Script created.
+    .PARAMETER server_name
+    Name of the database server.
 
+    .PARAMETER database_name
+    Name of the database.
+
+    .PARAMETER survey_year
+    Year the survey was conducted. Will be appended to the base_folder parameter to build the photos archive directory.
+
+    .PARAMETER output_folder
+    Specifies where to write the CSV file. Expect \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\<survey_year>\exported_files
+
+    .EXAMPLE
+    .\extract_exif_info.ps1 -base_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_C\ -server_name inpglbafs03 -database_name SEAN_Staging_TEST_2017 -survey_year 2022 -output_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022\exported_files
+
+#>
+<#
+    UPDATES:
+
+    TZ 2/28/2024: 
+    - Script created.
 #>
 
 # Script input parameters:
 [CmdletBinding(SupportsShouldProcess)]
 param (
-    # Set the base directory folder. This should be the SO_C for the desired survey year.
     [Parameter(Mandatory)]
     [String]
     $base_folder,
@@ -30,7 +53,6 @@ param (
     [int]
     $survey_year,
 
-    # Specify where to write the CSV file. Best to write to the local hard drive rather than over the network.
     [Parameter(Mandatory)]
     [String]
     $output_folder
@@ -51,6 +73,8 @@ $fileSearchParams = @{
 # Load the files into a collection:
 #$fileCollection = Get-ChildItem @fileSearchParams
 
+if ($base_folder.EndsWith("\") -ne $true) { $base_folder = "$($base_folder)\" }
+$base_folder = "$($base_folder)\$($survey_year)"
 $so_c_dirs = Get-ChildItem -Path $base_folder -Directory
 
 <#
@@ -93,7 +117,7 @@ try {
     # Loop through the SO_C subdirectories, then loop through all the photos, and save
     # the file EXIF data into the output .CSV file:
     foreach($so_c_dir in $so_c_dirs) {
-        Write-Host "Iterating directory $($so_c_dir.Name)..."
+        Write-Host "Iterating directory '$($so_c_dir.Name)'..."
         if ($so_c_dir.Name.EndsWith("A")) {
             $survey_type = 'Abundance'
         } elseif ($so_c_dir.Name.EndsWith("O")) {
@@ -101,8 +125,8 @@ try {
         } elseif ($so_c_dir.Name.EndsWith("R")) {
             $survey_type = 'Random'
         } else {
-            Write-Host "Failed to determine the survey type based on the SO_C subdirectory last character."
-            throw;
+            Write-Host "Failed to determine the survey type based on the SO_C subdirectory '$($so_c_dir)' last character."
+            continue;
         }
 
         $photos = Get-ChildItem -Path $so_c_dir.FullName -Filter "*.jpg"
@@ -145,10 +169,10 @@ try {
             } # end try-catch
 
         } # end of loop thru photos
+        $streamWriter.Flush()
     } # end of loop through so_c dirs
 
     $streamWriter.Close()
-    $streamWriter.Dispose()
 
     # Do a bulk insert of the CSV file into table SO.SO_C_PHOTO_INFO
     $sqlcmd.CommandType = 'Text'
@@ -173,7 +197,7 @@ try {
     Write-Error ($_.InvocationInfo | Format-List -Force | Out-String) -ErrorAction Continue
     $retval = -999
 } finally {
-
+    #$streamWriter.Close()
     if ($sqlcmd.Connection.State -ne [System.Data.ConnectionState]::Closed) {
         $sqlconn.Close()
     }
