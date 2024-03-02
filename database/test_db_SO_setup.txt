@@ -88,6 +88,10 @@ TODO: Start here to finish prod setup/test/val:
 	validation_date (date this was run) - could add this later...
 	- Do we want to update this for subsequent validations?
 	
+	TODO:
+	- Verify the image count in SO_C matches the count of rows in the CSV.
+	- Extract the EXIF date photo taken, and for each image compare with the datetime in the CSV.
+	
 9. Export the deliverable submission candidate CSV files from the SO_D table using PowerShell script 'export_CSVs_from_database'. Example syntax:
 	.\export_CSVs_from_database.ps1 -Output_folder "\\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\SO_D_exports" -server_name "inpglbafs03" -database_name "SEAN_Staging_TEST_2017" -survey_year 2022
 		# This loop was created on 1/18/24 and successfully exported all three files in one run.
@@ -105,6 +109,11 @@ TODO: Start here to finish prod setup/test/val:
 	- VALIDATED_BY
 
 11. Need an export script that exports the entire SO_D (all years). This will be the published deliverable.
+
+12. SO_C task TODO: Rename the SO_C images to match the database 'SO_C_*' format.
+	- Make a script for this
+	# 3/1/24 - new script 'rename_SO_C_filenames.ps1' executed successfully.
+	
 
 
 
