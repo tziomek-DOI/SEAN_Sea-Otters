@@ -31,6 +31,9 @@
 
     TZ 2/28/2024: 
     - Script created.
+
+    TODO:
+    - Pipe the output of this script to a log file in the same directory as the CSV.
 #>
 
 # Script input parameters:
