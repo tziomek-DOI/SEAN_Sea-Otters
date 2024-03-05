@@ -20,8 +20,12 @@
     .PARAMETER survey_year
     Year the survey was conducted. Will be appended to the so_c_base_folder parameter to build the photos archive directory.
 
+    .PARAMETER is_cumulative
+    Pass $true if a full cumulative CSV file is desired (all years including survey_year parameter). Otherwise pass $false to only
+    extract the survey_year parameter data.
+
     .EXAMPLE
-    .\export_CSVs_from_database.ps1 -Output_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022\exported_files -server inpglbafs03 -database SEAN_Staging_TEST_2017 -survey_year 2022
+    .\export_CSVs_from_database.ps1 -Output_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022\exported_files -server inpglbafs03 -database SEAN_Staging_TEST_2017 -survey_year 2022 -is_cumulative $true
 
 #>
 <#
@@ -65,7 +69,11 @@ param (
 
     [Parameter(Mandatory=$true)]
     [int]
-    $survey_year
+    $survey_year,
+
+    [Parameter(Mandatory=$true)]
+    [bool]
+    $is_cumulative
 )
 
 # This function is deprecated. Remove later once confirmed we won't use it. It is faster but not easy to sort.
@@ -122,6 +130,8 @@ function ExportCSV_BCP([string]$survey_type, [int]$survey_year, [string]$outputF
 
 <#
  # Uses a SQLDataReader and a StreamWriter to query the database and write the CSV to file(s).
+ #
+ # Usage note: If the $survey_year = 0, this means to extract all years into one cumulative file.
  #>
 function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd) {
         
@@ -129,7 +139,44 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     Write-Host "`$survey_type = $survey_type"
     Write-Host "`$survey_year = $survey_year"
     Write-Host "`$outputFilename = $outputFilename"
+    switch($is_cumulative) {
+        $true { Write-Host "Cumulative file? Yes." }
+        $false { Write-Host "Cumulative file? No." }
+    }
     Write-Host " "
+
+    if ($is_cumulative -eq $true) {
+        $query = @"
+    SELECT
+    [PHOTO_FILE_NAME]
+    ,[PHOTO_TIMESTAMP_UTC]
+    ,[PHOTO_TIMESTAMP_AK_Local] AS PHOTO_TIMESTAMP_AK_LOCAL
+    ,CAST([LATITUDE_WGS84] AS nvarchar) AS LATITUDE_WGS84
+    ,CAST([LONGITUDE_WGS84] AS nvarchar) AS LONGITUDE_WGS84
+    ,CAST([ALTITUDE] AS nvarchar) AS ALTITUDE
+    ,[SURVEY_TYPE]
+    ,CAST([COUNT_ADULT] AS nvarchar) AS COUNT_ADULT
+    ,CAST([COUNT_PUP] AS nvarchar) AS COUNT_PUP
+    ,CASE WHEN [KELP_PRESENT] IS NULL THEN '' ELSE [KELP_PRESENT] END AS KELP_PRESENT
+    ,CASE WHEN [LAND_PRESENT] IS NULL THEN '' ELSE [LAND_PRESENT] END AS LAND_PRESENT
+    ,CASE WHEN [IMAGE_QUALITY] IS NULL THEN '' ELSE [IMAGE_QUALITY] END AS IMAGE_QUALITY
+    ,[COUNTED_BY]
+    ,[COUNTED_DATE]
+    ,[protocol]
+    ,CASE WHEN [QUALITY_FLAG] IS NULL THEN '' ELSE [QUALITY_FLAG] END AS QUALITY_FLAG
+    ,CASE WHEN [ORIGINAL_FILENAME] IS NULL THEN '' ELSE [ORIGINAL_FILENAME] END AS ORIGINAL_FILENAME
+    ,CASE WHEN [FLOWN_BY] IS NULL THEN '' ELSE [FLOWN_BY] END AS FLOWN_BY
+    ,CASE WHEN [CAMERA_SYSTEM] IS NULL THEN '' ELSE [CAMERA_SYSTEM] END AS CAMERA_SYSTEM
+    ,CASE WHEN [TRANSECT] IS NULL THEN '' ELSE [TRANSECT] END AS TRANSECT
+    ,[VALIDATED_BY]
+    FROM [SO].[view_SO_D_allrecs_w_lookups]
+    ORDER BY PHOTO_TIMESTAMP_AK_Local,PHOTO_FILE_NAME ASC;
+"@
+    } elseif ($survey_year -lt 2017 -or $survey_year -gt (Get-Date).Year) {
+        # 2017 is the first year of Sea Otter surveys, so any dates entered prior are invalid.
+        Write-Host "ERROR: Invalid year specified ($($survey_year). Must be between 2017 and the current year."
+        throw
+    } else {
 
     $query = @"
     SELECT
@@ -158,7 +205,8 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     WHERE [SURVEY_TYPE] = '$($survey_type)' AND DATEPART(year, [PHOTO_TIMESTAMP_UTC]) = $($survey_year)
     ORDER BY PHOTO_TIMESTAMP_AK_Local,PHOTO_FILE_NAME ASC;
 "@
-    # For PS multi-line strings (above), the "@ chars on the last line MUST be the first two characters of that line,
+    } # end of else
+    # NOTE: For PS multi-line strings (above), the "@ chars on the last line MUST be the first two characters of that line,
     # so don't try to indent them to make it look pretty!
 
     Write-Host "`$query = $query"
@@ -236,7 +284,7 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     } # end finally   
 }
 
-# Combine the three CSVs created from the database export into one cumulative file.
+# Combine the three CSVs created from the database export into one cumulative (yearly) file.
 function MakeCumulativeCSV([string]$cumulative_filename) {
 
     # The first part extracts the header row from the first file and writes to output, then appends the content from all three,
@@ -266,6 +314,23 @@ $sqlcmd.Connection = $sqlconn
 $sqlcmd.CommandTimeout = 0
 
 try {
+
+    # If we want to extract all records into a cumulative file (the DataStore version of the deliverable),
+    # we do not want to go into the foreach loop (below).
+    switch($is_cumulative) {
+        $true {
+            # ...
+
+            # Build the export filename:
+            $outputFilename = "$($doubleQuoteChar)$($Output_folder)\SO_D_2017-$($survey_year).CSV$($doubleQuoteChar)"
+
+            # Run the export
+            ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
+        }
+        $false { 
+            # we could insert the foreach code here but its a lot of indenting...or else what?
+        }
+    }
 
     foreach($survey_type in $survey_types) {
         
@@ -297,14 +362,20 @@ try {
 
         # Run the export (BCP):
         # Was having trouble passing this conversion value in the function call...
-        $survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
+        # TODO: why are we overwriting the input parameter here? 
+        #$survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
         ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
     }
 
     # Create a cumulative CSV file:
-    $outputFilename = "$($Output_folder)\SO_D_$($survey_year).CSV"
-    Write-Host "Creating cumulative file $($outputFilename)"
-    MakeCumulativeCSV -cumulative_filename $outputFilename
+    # This is only needed if we want to make a single year cumulative file (all data for year 2022 for example).
+    # This may not be needed...uncomment to use.
+    # If the 3 separate CSVs have already been made, uncomment the 'continue' statement inside the foreach loop above
+    # to skip re-exporting from the database, unless re-export is desired.
+    #
+    #$outputFilename = "$($Output_folder)\SO_D_$($survey_year).CSV"
+    #Write-Host "Creating cumulative file $($outputFilename)"
+    #MakeCumulativeCSV -cumulative_filename $outputFilename
 
 }
 catch [Exception] {
