@@ -1,17 +1,44 @@
-<# Export data from database into CSV files.
+<# 
+    .SYNOPSIS
+    export_CSVs_from_database.ps1
 
-We have one SQL query, which selects all records from the view. The DB record columns are omitted.
-We can pass in the year and the survey type to filter for the export.
+    .DESCRIPTION
+    Exports SO_D data from database into CSV files.
 
-UPDATES:
+    We have one SQL query, which selects all records from the view. The DB record columns are omitted.
+    We can pass in the year and the survey type to filter for the export.
 
-TZ 1/18/2024: 
-- Added mechanism to loop through the possible survey type to export the CSV all at once.
-- Added TRANSECT to the list of exported fields
+    .PARAMETER Output_folder
+    The location (on the server) where the files are to be exported. This will not work to the local pc.
 
-TZ 2/13/2024:
-- Changed the export mechanism from BCP (which doesn't easily support sorting) to a SQLDataReader/StreamWriter (.NET).
-- Modified the SQL query, no longer need the UNION for column headings, and adjusted the string syntax as needed.
+    .PARAMETER server_name
+    Name of the database server.
+
+    .PARAMETER database_name
+    Name of the database.
+
+    .PARAMETER survey_year
+    Year the survey was conducted. Will be appended to the so_c_base_folder parameter to build the photos archive directory.
+
+    .EXAMPLE
+    .\export_CSVs_from_database.ps1 -Output_folder \\inpglbafs03\data\SEAN_Data\Work_Zone\SO\SO_D\2022\exported_files -server inpglbafs03 -database SEAN_Staging_TEST_2017 -survey_year 2022
+
+#>
+<#
+    UPDATES:
+
+    TZ 1/18/2024: 
+    - Added mechanism to loop through the possible survey type to export the CSV all at once.
+    - Added TRANSECT to the list of exported fields
+
+    TZ 2/13/2024:
+    - Changed the export mechanism from BCP (which doesn't easily support sorting) to a SQLDataReader/StreamWriter (.NET).
+    - Modified the SQL query, no longer need the UNION for column headings, and adjusted the string syntax as needed.
+
+    TZ 3/4/2024:
+    - Added a function which combines the three individual CSVs into a yearly cumulative file named SO_D_2022.CSV.
+        (this will be the deliverable we publish to DataStore...the three separate files go off for inclusion into AOOS I believe.)
+    - Added the help information at the top of this file.
 
 #>
 
@@ -205,6 +232,23 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
     } # end finally   
 }
 
+# Combine the three CSVs created from the database export into one cumulative file.
+function MakeCumulativeCSV([string]$cumulative_filename) {
+
+    # The first part extracts the header row from the first file and writes to output, then appends the content from all three,
+    # but skips the header row.
+    # Had trouble getting the $_.FullName to work on the first part so separated it out just to move along.
+    $first_file = Get-ChildItem -Path $Output_folder -Filter SO_D_*.CSV | Select-Object -First 1
+    Get-Content -Path $first_file.FullName | Select-Object -First 1 | Out-File -FilePath $cumulative_filename
+
+    Get-ChildItem -Path $Output_folder -Filter SO_D_*.CSV |
+    ForEach-Object {
+        Get-Content -Path $_.FullName |
+        Select-Object -Skip 1
+    } | 
+    Out-File -FilePath $cumulative_filename -Append
+}
+
 # special double quote character
 $doubleQuoteChar = [char]34
 $delimiter = "$($doubleQuoteChar),$($doubleQuoteChar)"
@@ -220,6 +264,10 @@ $sqlcmd.CommandTimeout = 0
 try {
 
     foreach($survey_type in $survey_types) {
+        
+        # For testing...comment or remove this!
+        #Write-Host "TEST MODE, skipping database extraction!"
+        #continue
 
         Write-Host "Processing survey type $survey_type..."
 
@@ -248,6 +296,11 @@ try {
         $survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
         ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
     }
+
+    # Create a cumulative CSV file:
+    $outputFilename = "$($Output_folder)\SO_D_$($survey_year).CSV"
+    Write-Host "Creating cumulative file $($outputFilename)"
+    MakeCumulativeCSV -cumulative_filename $outputFilename
 
 }
 catch [Exception] {
