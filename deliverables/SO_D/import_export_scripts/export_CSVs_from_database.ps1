@@ -40,6 +40,10 @@
         (this will be the deliverable we publish to DataStore...the three separate files go off for inclusion into AOOS I believe.)
     - Added the help information at the top of this file.
 
+    TODO:
+    - Create a cumulative (all years) CSV file (?)
+        - Could download the existing file from the DataStore reference and append to that,
+        or do a complete database extraction/validation process.
 #>
 
 # Script input parameters:
