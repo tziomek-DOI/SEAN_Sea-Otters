@@ -88,7 +88,6 @@ TODO: Start here to finish prod setup/test/val:
 	validation_date (date this was run) - could add this later...
 	- Do we want to update this for subsequent validations?
 	
-	TODO:
 	- Verify the image count in SO_C matches the count of rows in the CSV.
 	- Extract the EXIF date photo taken, and for each image compare with the datetime in the CSV.
 	
@@ -98,7 +97,6 @@ TODO: Start here to finish prod setup/test/val:
 	# We could make a config file, just name/value pairs in a txt or json, instead of command line params. This is better!
 
 10. From here, the SOP should be followed for the standard data management procedures to validate and certify the files.
-	# TODO: Finish updates and testing of website validation code.
 	# Need to add criteria for:
 	- PHOTO_TIMESTAMP_AK_Local (if we keep this in the CSV)
 	# The remaining fields are new to 2022 data so be wary
@@ -108,12 +106,19 @@ TODO: Start here to finish prod setup/test/val:
 	- TRANSECT
 	- VALIDATED_BY
 
-11. Need an export script that exports the entire SO_D (all years). This will be the published deliverable.
-
-12. SO_C task TODO: Rename the SO_C images to match the database 'SO_C_*' format.
+12. SO_C task: Rename the SO_C images to match the database 'SO_C_*' format.
 	- Make a script for this
 	# 3/1/24 - new script 'rename_SO_C_filenames.ps1' executed successfully.
-	
+
+TODO: Need an export script that exports the entire SO_D (all years). This will be the published deliverable.
+- Option 1: Long-term solution is pull the published file from DataStore (or Staging?) and append new data onto it, then validate the CSV.
+	- This will not work for first combination of 2017-2019+2022
+- Option 2: Especially for first time combination of old + SeeOtter data, could validate the entire SO_D (2017-2022), then export full CSV.
+
+TODO:
+- Will need to create a github code package, assign a version, and do the other steps per Rob Baker to associate the code with the deliverable.
+
+
 
 
 
