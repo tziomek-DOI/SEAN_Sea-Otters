@@ -32,6 +32,9 @@
     TZ 2/29/2024: 
     - Created. Successfully run against 2022 SO_C on 3/1/2024.
 
+    TZ 3/4/2024:
+    - Added check for non-renamed files. For each found file, an Optional error record gets added to the SO_D_Validation table.
+
 #>
 
 # Script input parameters:
@@ -56,15 +59,21 @@ param (
     $survey_year
 )
 
-# special double quote character
-#$doubleQuoteChar = [char]34
-#$delimiter = "$($doubleQuoteChar),$($doubleQuoteChar)"
+# Set this variable to $true to toggle test mode:
+$test_mode = $false
 
 # Need to ensure base folder has trailing backslash
 if ($so_c_base_folder.EndsWith("\") -ne $true) {
     $so_c_base_folder = $so_c_base_folder + "\"
 }
-$so_c_base_folder = $so_c_base_folder + $survey_year + "\"
+
+if ($test_mode -eq $false) {
+    $so_c_base_folder = $so_c_base_folder + $survey_year + "\"
+} else {
+    # for testing...
+    $so_c_base_folder = $so_c_base_folder + $survey_year + "\test\"
+}
+
 $survey_types = @('Optimal','Abundance','Random')
 
 $sqlconn = New-Object System.Data.SqlClient.SqlConnection
@@ -81,7 +90,9 @@ try {
         Write-Host "Processing survey type $survey_type..."
 
         # Remove after testing:
-        #if ($survey_type -ne 'Optimal') { continue }
+        if ($test_mode -eq $true) {
+            if ($survey_type -ne 'Abundance') { continue }
+        }
 
         # This gets the directory for the current survey type. The directories should end in "_A|O|R".
         $dir = Get-ChildItem -Path K:\SEAN_Data\Work_Zone\SO\SO_C\2022 -Name -Attributes Directory -Filter "*_$($survey_type.Substring(0,1))"
@@ -130,6 +141,9 @@ try {
         }
 
         $sqlcmd.CommandType = 'Text'
+
+# Remove this IF condition after running the SO_D_VALIDATION updates. The renaming portion is slow so no reason to redo it.
+#if ($test_mode -eq $true) {
         $sqlcmd.CommandText = $query
 
         $dr = $sqlcmd.ExecuteReader()
@@ -152,11 +166,30 @@ try {
 
             # Had to add -ErrorAction Stop to force it to throw an exception.
             # Does not seem prudent to let it keep processing.
-            Rename-Item -Path $orig_filename -NewName $so_c_filename -ErrorAction Stop
+            if ($test_mode -eq $false) {
+                Rename-Item -Path $orig_filename -NewName $so_c_filename -ErrorAction Stop
+            } else {
+                # in test mode, we do not force a stop if the file is not found.
+                Rename-Item -Path $orig_filename -NewName $so_c_filename -ErrorAction SilentlyContinue
+            }
 
         } # end $dr while loop
 
         $dr.Close()
+#} # end test - remove this line
+
+        # Now search this SO_C directory and report any files that did not get renamed.
+        # We could write a record to the SO_D_VALIDATION table since these are optional errors.
+        $files_not_renamed = Get-ChildItem -Path $so_c_dir -Exclude "SO_C_*.JPG"
+        Write-Host "Checking for files that did not get renamed..."
+
+        foreach($ff in $files_not_renamed) { 
+            #Write-Host "$($ff.Name),$($ff.CreationTime.ToString("yyyy-MM-dd HH:mm")),'Optional','Photo was not renamed.'" 
+            $insert_sql = "INSERT INTO [SO].[SO_D_VALIDATION] VALUES ('$($ff.Name)','$($ff.CreationTime.ToString("yyyy-MM-dd HH:mm"))','Optional','Photo was not renamed.');"
+            Write-Host "Adding to database: $($insert_sql)"
+            $sqlcmd.CommandText = $insert_sql
+            $recs_added = $sqlcmd.ExecuteNonQuery()
+        }
 
     
     } # foreach survey_type
