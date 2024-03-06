@@ -133,7 +133,8 @@ function ExportCSV_BCP([string]$survey_type, [int]$survey_year, [string]$outputF
  #
  # Usage note: If the $survey_year = 0, this means to extract all years into one cumulative file.
  #>
-function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, [System.Data.SqlClient.SqlCommand]$cmd) {
+function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilename, 
+                    [System.Data.SqlClient.SqlCommand]$cmd, [System.Data.SqlClient.SqlConnection]$sqlconn) {
         
     Write-Host "In ExportCSV..."
     Write-Host "`$survey_type = $survey_type"
@@ -221,6 +222,10 @@ function ExportCSV([string]$survey_type, [int]$survey_year, [string]$outputFilen
         $sb = [System.Text.StringBuilder]::new()
         $cmd.CommandType = 'Text'
         $cmd.CommandText = $query
+
+        if ($cmd.Connection.State -eq [System.Data.ConnectionState]::Closed) {
+            $sqlconn.Open()
+        }
 
         $dr = $cmd.ExecuteReader()
         $firstLine = $true
@@ -325,57 +330,58 @@ try {
             $outputFilename = "$($doubleQuoteChar)$($Output_folder)\SO_D_2017-$($survey_year).CSV$($doubleQuoteChar)"
 
             # Run the export
-            ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
+            ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd -sqlconn $sqlconn
         }
         $false { 
-            # we could insert the foreach code here but its a lot of indenting...or else what?
-        }
-    }
-
-    foreach($survey_type in $survey_types) {
+            # Use this to generate 3 CSV files (one for each survey type). These files will get sent to USGS for
+            # the creation of the abundance estimate.
+            foreach($survey_type in $survey_types) {
         
-        # For testing...comment or remove this!
-        #Write-Host "TEST MODE, skipping database extraction!"
-        #continue
+                # For testing...comment or remove this!
+                #Write-Host "TEST MODE, skipping database extraction!"
+                #continue
 
-        Write-Host "Processing survey type $survey_type..."
+                Write-Host "Processing survey type $survey_type..."
 
-        # Need to set the output filename ...
-        # This will be a function that gets called 3 times, once for each survey type.
-        # Also need to filter by survey year and order ASC to get the first record (though that should not matter).
-        $sqlcmd.CommandText = "SELECT TOP 1 PHOTO_TIMESTAMP_AK_Local FROM [SO].[view_SO_D_allrecs_w_lookups] " +
-            "WHERE SURVEY_TYPE = '$($survey_type)' " +
-            "AND DATEPART(year, [PHOTO_TIMESTAMP_AK_Local]) = $($survey_year) " +
-            "ORDER BY [PHOTO_TIMESTAMP_AK_Local];"
-        # where the survey_type will need to be the full word
-        # and then use the returned date as $survey_date which gets parsed to create the output filename.
+                # Need to set the output filename ...
+                # This will be a function that gets called 3 times, once for each survey type.
+                # Also need to filter by survey year and order ASC to get the first record (though that should not matter).
+                $sqlcmd.CommandText = "SELECT TOP 1 PHOTO_TIMESTAMP_AK_Local FROM [SO].[view_SO_D_allrecs_w_lookups] " +
+                    "WHERE SURVEY_TYPE = '$($survey_type)' " +
+                    "AND DATEPART(year, [PHOTO_TIMESTAMP_AK_Local]) = $($survey_year) " +
+                    "ORDER BY [PHOTO_TIMESTAMP_AK_Local];"
+                # where the survey_type will need to be the full word
+                # and then use the returned date as $survey_date which gets parsed to create the output filename.
 
-        if ($sqlcmd.Connection.State -eq [System.Data.ConnectionState]::Closed) {
-            $sqlconn.Open()
+                if ($sqlcmd.Connection.State -eq [System.Data.ConnectionState]::Closed) {
+                    $sqlconn.Open()
+                }
+
+                $survey_date = [datetime]$sqlcmd.ExecuteScalar()
+
+
+                # Build the export filename:
+                $outputFilename = "$($doubleQuoteChar)$($Output_folder)\SO_D_$($survey_date.ToString("yyyyMMdd"))_$($survey_type.Substring(0,1).ToUpper()).CSV$($doubleQuoteChar)"
+
+                # Run the export (BCP):
+                # Was having trouble passing this conversion value in the function call...
+                # TODO: why are we overwriting the input parameter here? 
+                #$survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
+                ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd -sqlconn $sqlconn
+            }
+
+            # Create a cumulative CSV file:
+            # This is only needed if we want to make a single year cumulative file (all data for year 2022 for example).
+            # This may not be needed...uncomment to use.
+            # If the 3 separate CSVs have already been made, uncomment the 'continue' statement inside the foreach loop above
+            # to skip re-exporting from the database, unless re-export is desired.
+            #
+            #$outputFilename = "$($Output_folder)\SO_D_$($survey_year).CSV"
+            #Write-Host "Creating cumulative file $($outputFilename)"
+            #MakeCumulativeCSV -cumulative_filename $outputFilename
         }
-
-        $survey_date = [datetime]$sqlcmd.ExecuteScalar()
-
-
-        # Build the export filename:
-        $outputFilename = "$($doubleQuoteChar)$($Output_folder)\SO_D_$($survey_date.ToString("yyyyMMdd"))_$($survey_type.Substring(0,1).ToUpper()).CSV$($doubleQuoteChar)"
-
-        # Run the export (BCP):
-        # Was having trouble passing this conversion value in the function call...
-        # TODO: why are we overwriting the input parameter here? 
-        #$survey_year = [Convert]::ToInt32($survey_date.ToString("yyyy"))
-        ExportCSV -survey_type $survey_type -survey_year $survey_year -outputFilename $outputFilename -cmd $sqlcmd
     }
 
-    # Create a cumulative CSV file:
-    # This is only needed if we want to make a single year cumulative file (all data for year 2022 for example).
-    # This may not be needed...uncomment to use.
-    # If the 3 separate CSVs have already been made, uncomment the 'continue' statement inside the foreach loop above
-    # to skip re-exporting from the database, unless re-export is desired.
-    #
-    #$outputFilename = "$($Output_folder)\SO_D_$($survey_year).CSV"
-    #Write-Host "Creating cumulative file $($outputFilename)"
-    #MakeCumulativeCSV -cumulative_filename $outputFilename
 
 }
 catch [Exception] {
