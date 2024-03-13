@@ -18,9 +18,10 @@ group by PHOTO_TIMESTAMP_AK_LOCAL
 , c.MAKE, c.MODEL
 
 /*
-update [so].[SO_D]
-set CAMERA_ID = 2
-where datepart(year, photo_timestamp_ak_local) < 2022
+UPDATE [SO].[SO_D]
+SET CAMERA_ID = (SELECT ID FROM [SO].[CAMERA] WHERE MAKE = 'NIKON' and MODEL = 'D810')
+WHERE DATEPART(year, PHOTO_TIMESTAMP_AK_LOCAL) < 2022
+AND CAMERA_ID IS NULL
 */
 
 select distinct
@@ -35,6 +36,7 @@ group by PHOTO_TIMESTAMP_AK_LOCAL
 , e.INITIALS
 
 /*
+-- JNW did 2017-2019 surveys...ID = 2
 update [so].[SO_D]
 set FLOWN_BY_ID = 2
 where datepart(year, photo_timestamp_ak_local) < 2022
