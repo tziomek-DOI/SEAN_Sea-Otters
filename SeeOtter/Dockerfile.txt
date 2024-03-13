@@ -1,0 +1,19 @@
+# escape=`
+FROM mcr.microsoft.com/windows:1809
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+# Install .NET 4.8
+RUN Invoke-WebRequest -UseBasicParsing "https://dotnet.microsoft.com/download/dotnet-framework/net48" -OutFile dotnet.exe; `
+    Start-Process ./dotnet.exe -ArgumentList '/q' -NoNewWindow -Wait; `
+    Remove-Item -Force dotnet.exe
+
+# Install Windows SDK 10.0.19041.0
+RUN Invoke-WebRequest -UseBasicParsing "https://download.visualstudio.microsoft.com/download/pr/5bed16fa-4a3e-40eb-a45c-5e8f36622bbf/F4994C69F08DD7840A1C1783FF50C8C3B2D5EED6D05988C9EB2A42C6B7C5D256/Windows%20SDK/winsdksetup.exe" -OutFile winsdksetup.exe; `
+    Start-Process ./winsdksetup.exe -ArgumentList '/features OptionId.WindowsSoftwareDevelopmentKit OptionId.WindowsSoftwareLogoToolkit OptionId.NetFxSoftwareDevelopmentKit /q' -NoNewWindow -Wait; `
+    Remove-Item -Force winsdksetup.exe
+
+# Copy certificate and password file
+COPY ["mycertificate.pfx", "password.txt", "C:\\Signing"]
+
+# Sign executable
+CMD & 'C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe' sign /f C:\Signing\mycertificate.pfx /p (Get-Content C:\Signing\password.txt -Raw) /t http://timestamp.digicert.com /v C:\Path\to\yourfile.exe
