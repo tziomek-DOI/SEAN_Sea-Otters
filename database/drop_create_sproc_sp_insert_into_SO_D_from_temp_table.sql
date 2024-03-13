@@ -1,6 +1,3 @@
-USE [SEAN_Staging_TEST_2017]
-GO
-
 /****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 1/3/2024 8:12:27 AM ******/
 DROP PROCEDURE IF EXISTS [SO].[sp_insert_into_SO_D_from_temp_table]
 GO
@@ -12,7 +9,6 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
 -- ===============================================================================
 -- Author:		Thomas Ziomek
 -- Create date: 2023-12-27
@@ -23,6 +19,11 @@ GO
 -- @Protocol: Protocol/version used in the generation of the records.
 -- @Survey_Type: Single char ('A','R','O') to help filter which records to update.
 -- @Survey_Year: Year the survey was conducted.
+--
+-- UPDATES:
+-- TZ 3/13/2024:
+--		- Removed "use [database] and other database names.
+--		- Renamed temp table "SO_D_2022" to "SO_D_SeeOtter".
 --
 -- TODO:
 -- Currently no SeeOtter support for KELP_PRESENT, LAND_PRESENT, IMAGE_QUALITY.
@@ -53,8 +54,8 @@ BEGIN
 		set @DST_Start = (SELECT dbo.fn_GetDaylightSavingsTimeStart(CONVERT(varchar,@Survey_Year)))
 		set @DST_End = (SELECT dbo.fn_GetDaylightSavingsTimeEnd(CONVERT(varchar,@Survey_Year)))
 
-		INSERT INTO [Sandbox2].[SO].[SO_D]
-		(PHOTO_FILE_NAME,PHOTO_TIMESTAMP_UTC,PHOTO_TIMESTAMP_AK_Local,LATITUDE_WGS84,LONGITUDE_WGS84,ALTITUDE,SURVEY_TYPE_ID,COUNT_ADULT,COUNT_PUP,IMAGE_QUALITY_ID,
+		INSERT INTO [SO].[SO_D]
+		(PHOTO_FILE_NAME,PHOTO_TIMESTAMP_UTC,PHOTO_TIMESTAMP_AK_LOCAL,LATITUDE_WGS84,LONGITUDE_WGS84,ALTITUDE,SURVEY_TYPE_ID,COUNT_ADULT,COUNT_PUP,IMAGE_QUALITY_ID,
 		COUNTED_BY_ID,COUNTED_DATE,PROTOCOL_ID,QUALITY_FLAG_ID,ORIGINAL_FILENAME,FLOWN_BY_ID,CAMERA_ID,VALIDATED_BY_ID,
 		DATE_CREATED,CREATED_BY_ID,DATE_LAST_UPDATED,LAST_UPDATED_BY_ID)
 
@@ -97,7 +98,8 @@ BEGIN
 			,6
 			,GETDATE()
 			,6
-		FROM [Sandbox2].[SO].[SO_D_2022] s
+		--FROM [SO].[SO_D_2022] s
+		FROM [SO].[SO_D_SeeOtter] s
 		WHERE SUBSTRING(s.SURVEY_TYPE,1,1) = @Survey_Type;
 	
 		SET @Num_Recs = @@ROWCOUNT;
