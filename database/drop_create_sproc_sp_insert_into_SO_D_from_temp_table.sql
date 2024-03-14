@@ -1,13 +1,16 @@
-/****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 1/3/2024 8:12:27 AM ******/
-DROP PROCEDURE IF EXISTS [SO].[sp_insert_into_SO_D_from_temp_table]
+
+/****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 3/14/2024 2:45:28 PM ******/
+DROP PROCEDURE [SO].[sp_insert_into_SO_D_from_temp_table]
 GO
 
-/****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 1/3/2024 8:12:27 AM ******/
+/****** Object:  StoredProcedure [SO].[sp_insert_into_SO_D_from_temp_table]    Script Date: 3/14/2024 2:45:28 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 -- ===============================================================================
 -- Author:		Thomas Ziomek
@@ -21,9 +24,12 @@ GO
 -- @Survey_Year: Year the survey was conducted.
 --
 -- UPDATES:
--- TZ 3/13/2024:
+--	TZ 3/13/2024:
 --		- Removed "use [database] and other database names.
 --		- Renamed temp table "SO_D_2022" to "SO_D_SeeOtter".
+--	TZ 3/14/2024:
+--		- Changed hard-coded value for QUALITY_FLAG with a query.
+--		- Fixed casing of PHOTO_TIMESTAMP_AK_LOCAL
 --
 -- TODO:
 -- Currently no SeeOtter support for KELP_PRESENT, LAND_PRESENT, IMAGE_QUALITY.
@@ -56,7 +62,7 @@ BEGIN
 
 		INSERT INTO [SO].[SO_D]
 		(PHOTO_FILE_NAME,PHOTO_TIMESTAMP_UTC,PHOTO_TIMESTAMP_AK_LOCAL,LATITUDE_WGS84,LONGITUDE_WGS84,ALTITUDE,SURVEY_TYPE_ID,COUNT_ADULT,COUNT_PUP,IMAGE_QUALITY_ID,
-		COUNTED_BY_ID,COUNTED_DATE,PROTOCOL_ID,QUALITY_FLAG_ID,ORIGINAL_FILENAME,FLOWN_BY_ID,CAMERA_ID,VALIDATED_BY_ID,
+		COUNTED_BY_ID,COUNTED_DATE,PROTOCOL_ID,QUALITY_FLAG_ID,ORIGINAL_FILENAME,FLOWN_BY_ID,CAMERA_ID,TRANSECT,VALIDATED_BY_ID,
 		DATE_CREATED,CREATED_BY_ID,DATE_LAST_UPDATED,LAST_UPDATED_BY_ID)
 
 		SELECT 
@@ -78,27 +84,26 @@ BEGIN
 			--,s.LAND_PRESENT_ID
 			,(SELECT i.ID FROM [SO].[IMAGE_QUALITY] i WHERE i.IMAGE_QUALITY = s.IMAGE_QUALITY) --AS IMAGE_QUALITY_ID
 			,(SELECT e.ID FROM [SO].[EMPLOYEE] e WHERE e.AFFILIATION = s.SeeOtter_VERSION) --AS COUNTED_BY_ID
-			-- We need something for COUNTED_DATE...likely, the date SeeOtter was run to create the CSV, which is then loaded into the temp table.
-			-- For 2022 we can use 11/3/2023
-			-- Going forward, here is where the COUNTED_DATE input parameter will be placed, once this goes into a stored proc
-			-- Logic:
+			-- COUNTED_DATE:
 			-- Check the PHOTO_TIMESTAMP year and survey type. Update COUNTED_DATE only for matching records:
 			,CASE
 				WHEN DATEPART(year, s.PHOTO_TIMESTAMP) = @Survey_Year AND @Survey_Type = SUBSTRING(s.SURVEY_TYPE,1,1) THEN @Counted_Date
-				--ELSE DATEFROMPARTS(DATEPART(year, @Counted_Date),01,01)
 			END
 			-- Protocol will also be an input param from a stored proc.
 			,(SELECT p.ID FROM [SEAN].tbl_protocol p WHERE p.protocol = @Protocol) --AS PROTOCOL_ID
-			,4 -- indicates record has not yet been QC'd...we can update this during validation.
+			,(SELECT q.ID FROM [SO].[QUALITY_FLAG] q WHERE q.QUALITY_FLAG = 'Raw') --AS QUALITY_FLAG_ID
 			,SUBSTRING(s.FilePath, PATINDEX('%%\[01]_[0]_[0]_%%', s.FilePath)+1,LEN(s.FilePath)-PATINDEX('%%\[01]_[0]_[0]_%%', s.FilePath)) --AS original_filename
 			,(SELECT e.ID FROM [SO].[EMPLOYEE] e WHERE e.INITIALS = s.FLOWN_BY) --AS FLOWN_BY_ID
 			,(SELECT c.ID FROM [SO].[CAMERA] c WHERE c.DESCRIPTION = s.CAMERA_SYSTEM) --AS CAMERA_ID
+			,CASE
+				WHEN (s.Transect IS NULL OR TRIM(s.Transect) = '') THEN 'NA'
+				ELSE s.Transect
+			END -- AS TRANSECT
 			,(SELECT e.ID FROM [SO].[EMPLOYEE] e WHERE e.INITIALS = s.VALIDATED_BY) --AS VALIDATED_BY_ID
 			,GETDATE()
 			,6
 			,GETDATE()
 			,6
-		--FROM [SO].[SO_D_2022] s
 		FROM [SO].[SO_D_SeeOtter] s
 		WHERE SUBSTRING(s.SURVEY_TYPE,1,1) = @Survey_Type;
 	
