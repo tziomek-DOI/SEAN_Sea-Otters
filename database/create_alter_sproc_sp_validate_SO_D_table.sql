@@ -1,12 +1,11 @@
-USE [SEAN_Staging_2017]
-GO
 
-/****** Object:  StoredProcedure [SO].[sp_validate_SO_D_table]    Script Date: 3/1/2024 3:40:42 PM ******/
+/****** Object:  StoredProcedure [SO].[sp_validate_SO_D_table]    Script Date: 3/14/2024 2:56:31 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 -- =============================================
@@ -25,12 +24,17 @@ GO
 --		with the EXIF date extracted directly from the photo (in table SO_C_PHOTO_INFO). This check is a good
 --		means to ensure the correct photos were copied into the SO_C.
 --
+-- TZ 3/4/2024:
+--		Added mandatory and optional error outputs.
+--
 -- =============================================
-CREATE OR ALTER         PROCEDURE [SO].[sp_validate_SO_D_table]
+CREATE OR ALTER           PROCEDURE [SO].[sp_validate_SO_D_table]
 	-- Add the parameters for the stored procedure here
 	@Survey_Year		INT
 	--,@Survey_Type_IN	NVARCHAR(9) -- only needed if we pass in a param to filter
 	,@Num_Recs			INT OUTPUT
+	,@Mand_Errors		INT OUTPUT
+	,@Opt_Errors		INT OUTPUT
 	,@Error_Code		INT OUTPUT
 AS
 BEGIN
@@ -424,6 +428,9 @@ BEGIN
 		DEALLOCATE sod_cursor;
 
 		SET @Num_Recs = @opt_err_count + @mand_err_count;
+		SET @Mand_Errors = @mand_err_count;
+		SET @Opt_Errors = @opt_err_count;
+
 		return 0;
 	END TRY BEGIN CATCH
 		SET @Error_Code = @@ERROR;
