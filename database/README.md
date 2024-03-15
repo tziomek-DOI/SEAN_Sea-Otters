@@ -5,7 +5,7 @@ Procedure to create database objects which support the SO_D deliverable process.
 1. Run script 'drop_create_SO_tables.sql' to create all the new tables, populate the lookup tables, and create relationships.
    - Script will check for object existence.
    
-2. Create and populate the pre-SeeOtter (2017-2019 survey years) table (SO_D_2019): 
+2. Create and populate the pre-SeeOtter (2017-2019 survey years) table (SO_D_2019):
 	a. Run script 'SO.SO_D_2019.Table.sql'. This creates an SO_D_2019 table and loads all the data from 2017-2019.
 		- 46832 rows affected (result of insert)
 		
@@ -21,9 +21,16 @@ Procedure to create database objects which support the SO_D deliverable process.
 		- These functions determine the start and end dates of daylight savings time based on the input year.
 	b. 'create_alter_view_SO_D_allrecs_w_lookups.sql'
 		- A flattened view of the SO_D table which will be used for the CSV export.
-	c. 'drop_create_sproc_sp_insert_into_SO_D_from_temp_table.sql' 
+	c. 'create_sproc_SO.load_CSVs_into_temp_table.sql'
+		- Used to load the SeeOtter raw CSV data into table SO_D_SeeOtter.
+	d. 'drop_create_sproc_sp_insert_into_SO_D_from_temp_table.sql' 
 		- Performs transformations, then loads data from the SO_D temp table ('SO_D_SeeOtter', which contains raw SeeOtter CSV data) into the main SO_D table.
-	d. 'create_sproc_SO.load_CSVs_into_temp_table.sql'
+	e. 'drop_create_table_SO.SO_D_validation.sql'
+		- This table was added after the original iteration of the main table creation script.
+	f. 'create_table_SO.SO_C_PHOTO_INFO.sql'
+		- This table was added after the original iteration of the main table creation script.
+	g. 'create_alter_sproc_sp_validate_SO_D_table.sql'
+		- Stored procedure which validates the SO_D table.
 
 4. Create the SSIS package which loads the raw SeeOtter CSV files into table SO_D_SeeOtter (temp table).
 	a. Use SQL Server Management Studio to import the file 'CSV_to_SO_D_SeeOtter.dtsx'.

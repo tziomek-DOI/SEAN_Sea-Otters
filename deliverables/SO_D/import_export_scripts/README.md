@@ -15,6 +15,16 @@ Standard Operating Procedure - SO_D data loading, validation, export
 		Example:
 		.\insert_into_SO_D_from_temp_table.ps1 -Folder "<path_to_csv_files>" -Filter *.csv -server <database_server_name> -database <database_name> -protocol <SEAN_protocol_version>
 
+	b. Verify the COUNTED_DATE is correct for all newly-imported records. The COUNTED_DATE is currently acquired by a PowerShell script that reads the
+	   create date from the CSV file. If for some reason that date got updated (due to someone manipulating the file in some way), this needs to be corrected.
+	   There is an UPDATE script available, called 'update_SO_D_fix_counted_dates.sql', which can be used, but it must be modified to be sure the correct
+	   records are updated. Thus, the script has the UPDATE SQL commented for safety.
+	   Only run this script if needed.
+	   
+	c. Verify the 2017-2019 data has the CAMERA and FLOWN_BY fields populated. These fields were not available during the time of those surveys, and were
+	   added starting with the 2022 (SeeOtter) surveys. Script 'update_SO_D_camera_and_flown-by.sql' was used to post-populate those fields.
+	   This should not be needed, UNLESS the entire database is being re-created for some reason.
+	   
 3. Perform preprocessing of the survey photos. This involves two separate procedures.
 	- Rename the SO_C photos to the 'SO_C_*' format defined in the Sea Otter protocol/SOP.
 		NOTE: This step may have been done previously, but the photo filenames should be checked prior to running the validation step to follow.
