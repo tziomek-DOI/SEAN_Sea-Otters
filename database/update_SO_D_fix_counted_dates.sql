@@ -6,12 +6,12 @@
  ******/
 
 /*
-UPDATE [SEAN_Staging_2017].[SO].[SO_D]
+UPDATE [SO].[SO_D]
 SET counted_date = '2023-11-02'
   where datepart(year, PHOTO_TIMESTAMP_AK_LOCAL) = 2022
   and SUBSTRING(photo_file_name, 15, 1) = 'A'
 
-UPDATE [SEAN_Staging_2017].[SO].[SO_D]
+UPDATE [SO].[SO_D]
 SET counted_date = '2023-11-03'
   where datepart(year, PHOTO_TIMESTAMP_AK_LOCAL) = 2022
   and SUBSTRING(photo_file_name, 15, 1) = 'O'
@@ -44,7 +44,7 @@ SELECT
       ,[CREATED_BY_ID]
       ,[DATE_LAST_UPDATED]
       ,[LAST_UPDATED_BY_ID]
-  FROM [SEAN_Staging_2017].[SO].[SO_D]
+  FROM [SO].[SO_D]
   where datepart(year, PHOTO_TIMESTAMP_AK_LOCAL) = 2022
   order by PHOTO_TIMESTAMP_AK_LOCAL
 --  and SUBSTRING(photo_file_name, 15, 1) = 'A'
